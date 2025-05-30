@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 240, 240, 240; /* subtle-white */
+  --background-start-rgb: 10, 25, 47; /* dark-navy */
+  --background-end-rgb: 0, 0, 0; /* black */
+
+  /* Neon Gradients & Accents */
+  --electric-blue-rgb: 0, 255, 255;
+  --violet-rgb: 138, 43, 226;
+  --glow-accent-rgb: 125, 249, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      rgb(var(--background-start-rgb)),
+      rgb(var(--background-end-rgb))
+    );
+  @apply font-sans; /* Default to sans-serif, can be overridden */
+}
+
+@layer components {
+  .btn {
+    @apply px-8 py-3 font-bold rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-75;
+  }
+  .btn-primary {
+    @apply bg-gradient-to-r from-electric-blue to-violet text-black hover:from-violet hover:to-electric-blue focus:ring-electric-blue;
+    /* For glowing text on dark button: text-glow-accent */
+  }
+  .btn-secondary {
+    @apply bg-dark-navy border border-electric-blue text-electric-blue hover:bg-electric-blue hover:text-dark-navy focus:ring-electric-blue;
+  }
+
+  .header-main {
+    /* Bold sans-serif headers */
+    @apply text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-subtle-white;
+    /* Optional: Add a subtle text glow */
+    /* text-shadow: 0 0 8px rgba(var(--glow-accent-rgb), 0.7); */
+  }
+  .header-sub {
+    /* Elegant serif/italic subtext - assuming a serif font is imported or system default is acceptable */
+    @apply text-xl sm:text-2xl font-serif italic text-gray-400 mt-2;
+  }
+
+  /* Glassmorphism */
+  .glass-panel {
+    @apply bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-30 border border-gray-700 rounded-xl shadow-2xl;
+    background-color: rgba(10, 25, 47, 0.2); /* dark-navy with opacity */
+  }
+
+  .input-glow {
+    @apply bg-dark-navy border border-gray-700 text-subtle-white rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:border-transparent shadow-md;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
