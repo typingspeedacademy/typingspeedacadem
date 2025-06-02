@@ -145,7 +145,6 @@ const FuturisticLineChart: React.FC<FuturisticLineChartProps> = ({ data, classNa
           x: {
             grid: {
               color: 'rgba(255, 255, 255, 0.2)', // Light grid lines
-              borderColor: 'rgba(255, 255, 255, 0.2)', // Correct property for Chart.js v4+
             },
             ticks: {
               color: '#ffffff', // White X-axis ticks
@@ -157,7 +156,6 @@ const FuturisticLineChart: React.FC<FuturisticLineChartProps> = ({ data, classNa
           y: {
             grid: {
               color: 'rgba(255, 255, 255, 0.2)', // Light grid lines
-              borderColor: 'rgba(255, 255, 255, 0.2)', // Correct property for Chart.js v4+
             },
             ticks: {
               color: '#ffffff', // White Y-axis ticks
