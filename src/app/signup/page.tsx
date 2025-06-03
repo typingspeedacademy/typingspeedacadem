@@ -87,54 +87,47 @@ const SignupPage = () => {
       console.error('Supabase signup error:', signUpError);
       // Check for specific error messages indicating the user already exists.
       // Supabase might return different messages, so checking for common ones.
-      if (signUpError.message.toLowerCase().includes('user already registered') || 
-          signUpError.message.toLowerCase().includes('already exists') || 
-          signUpError.message.toLowerCase().includes('email rate limit exceeded')) { // Added check for rate limit as it can sometimes mask this
+      // The toLowerCase() ensures case-insensitive matching.
+      const errorMessage = signUpError.message.toLowerCase();
+      if (errorMessage.includes('user already registered') || 
+          errorMessage.includes('already exists') || 
+          errorMessage.includes('email rate limit exceeded') || // This can sometimes mask the 'already registered' error
+          (signUpError.status === 400 && errorMessage.includes('unable to validate email address')) || // Another possible Supabase message for existing unconfirmed user
+          (signUpError.status === 422 && errorMessage.includes('user already exists')) // More specific check
+          ) {
         setError('Email already registered. Please log in or reset your password.');
       } else {
-        setError(signUpError.message);
+        setError(signUpError.message); // Display other Supabase errors
       }
-      return;
+      return; // Important: Stop further processing if there's an error
     }
 
-    // This specific check for data.user.identities.length === 0 might be too specific
-    // and could lead to the ambiguous message. The primary check for signUpError should handle most cases.
-    // If signUpError is null and data.user exists, it's generally a success (pending confirmation if enabled).
-    // If signUpError is null and data.user is null, but data.session is null, it might indicate confirmation needed.
-
-    // The previous logic for identities.length === 0 is removed as the signUpError block should now correctly catch the "already registered" case.
-    // If there's no signUpError, and data.user exists, proceed with success message.
-    // If there's no signUpError, but no data.user, it might be an edge case or confirmation pending scenario.
-
-    // If we reach here and signUpError was null, it implies the API call itself didn't fail.
-    // Check if a user object was returned. If not, but also no error, it's an ambiguous state often meaning email confirmation is pending.
-    if (!data.user && !signUpError) {
-        // This can happen if email confirmation is required and the user object isn't returned immediately.
-        // Or if there's an issue with the user creation that doesn't throw a standard error but doesn't return a user.
-        // The previous message was a bit confusing. Let's stick to the standard confirmation message if no specific error occurred.
-        setMessage('Signup initiated! Please check your email to confirm your account.');
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-        setUsername('');
-        return;
-    }
+    // If signUpError is null, the API call itself was successful.
+    // Now, check the 'data' object from Supabase.
+    // 'data.user' existing usually means success (or confirmation pending if enabled).
+    // 'data.session' being null when 'data.user' is also null might indicate confirmation is required.
 
     if (data.user) {
-      // Handle successful signup
-      console.log('Signup successful:', data.user);
+      // User object exists: Successful signup (or email confirmation pending).
+      console.log('Signup successful (user object present):', data.user);
       setMessage('Signup successful! Please check your email to confirm your account.');
-      // Optionally, clear form or redirect
       setEmail('');
       setPassword('');
       setConfirmPassword('');
-      setUsername(''); // Clear username field
-      // router.push('/dashboard'); // Example redirect using Next.js router if imported
-      setUser(data.user); // Set user state upon successful signup
+      setUsername('');
+      setUser(data.user);
+    } else if (data.session === null && !data.user) {
+      // No user object, and session is null. This strongly suggests email confirmation is required.
+      console.log('Signup pending confirmation (no user object, null session):', data);
+      setMessage('Signup initiated! Please check your email to confirm your account.');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setUsername('');
     } else {
-      // This case should ideally not be reached if signUpError is handled
-      // but as a fallback:
-      setError('An unexpected error occurred during signup. Please try again.');
+      // Fallback for any other unexpected scenario where signUpError is null, but data is not as expected.
+      console.warn('Unexpected Supabase signup response (no error, but data is unusual):', data);
+      setError('An unexpected issue occurred during signup. Please try again.');
     }
   };
 
