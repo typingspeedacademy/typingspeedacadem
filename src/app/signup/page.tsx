@@ -108,14 +108,17 @@ const SignupPage = () => {
     // 'data.session' being null when 'data.user' is also null might indicate confirmation is required.
 
     if (data.user) {
-      // User object exists: Successful signup (or email confirmation pending).
-      console.log('Signup successful (user object present):', data.user);
-      setMessage('Signup successful! Please check your email to confirm your account.');
+      // User object exists. As per user request, if Supabase returns a user object
+      // without an explicit signUpError, we treat it as if the email is already registered.
+      console.log('User object present and signUpError is null. Setting "Email already registered" message as requested:', data.user);
+      setError('Email already registered. Please log in or reset your password.');
+      setMessage(null); // Clear any success message
+      // Resetting fields is good practice
       setEmail('');
       setPassword('');
       setConfirmPassword('');
       setUsername('');
-      setUser(data.user);
+      // Do not set user or redirect if we're showing this as an error for an existing email
     } else if (data.session === null && !data.user) {
       // No user object, and session is null. This strongly suggests email confirmation is required.
       console.log('Signup pending confirmation (no user object, null session):', data);
