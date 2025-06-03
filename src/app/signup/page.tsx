@@ -85,23 +85,38 @@ const SignupPage = () => {
 
     if (signUpError) {
       console.error('Supabase signup error:', signUpError);
-      if (signUpError.message.includes('User already registered') || signUpError.message.includes('already exists')) {
-        setError('This email is already registered. Please log in.');
+      // Check for specific error messages indicating the user already exists.
+      // Supabase might return different messages, so checking for common ones.
+      if (signUpError.message.toLowerCase().includes('user already registered') || 
+          signUpError.message.toLowerCase().includes('already exists') || 
+          signUpError.message.toLowerCase().includes('email rate limit exceeded')) { // Added check for rate limit as it can sometimes mask this
+        setError('Email already registered. Please log in or reset your password.');
       } else {
         setError(signUpError.message);
       }
       return;
     }
 
-    if (data.user && data.user.identities && data.user.identities.length === 0) {
-        // This case might indicate that email confirmation is required but the user object doesn't reflect it immediately.
-        // Or, it could be an issue with Supabase settings (e.g., if "Confirm email" is off but an issue occurs).
-        setMessage("Signup successful, but please check your email to confirm your account if required, or there might be an issue with user identity creation.");
-        // Optionally, clear form or redirect
+    // This specific check for data.user.identities.length === 0 might be too specific
+    // and could lead to the ambiguous message. The primary check for signUpError should handle most cases.
+    // If signUpError is null and data.user exists, it's generally a success (pending confirmation if enabled).
+    // If signUpError is null and data.user is null, but data.session is null, it might indicate confirmation needed.
+
+    // The previous logic for identities.length === 0 is removed as the signUpError block should now correctly catch the "already registered" case.
+    // If there's no signUpError, and data.user exists, proceed with success message.
+    // If there's no signUpError, but no data.user, it might be an edge case or confirmation pending scenario.
+
+    // If we reach here and signUpError was null, it implies the API call itself didn't fail.
+    // Check if a user object was returned. If not, but also no error, it's an ambiguous state often meaning email confirmation is pending.
+    if (!data.user && !signUpError) {
+        // This can happen if email confirmation is required and the user object isn't returned immediately.
+        // Or if there's an issue with the user creation that doesn't throw a standard error but doesn't return a user.
+        // The previous message was a bit confusing. Let's stick to the standard confirmation message if no specific error occurred.
+        setMessage('Signup initiated! Please check your email to confirm your account.');
         setEmail('');
         setPassword('');
         setConfirmPassword('');
-        setUsername(''); // Clear username field
+        setUsername('');
         return;
     }
 
