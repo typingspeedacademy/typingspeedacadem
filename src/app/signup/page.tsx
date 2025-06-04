@@ -80,8 +80,8 @@ const SignupPage = () => {
     });
 
     // Log the full response for debugging
-    console.log('Supabase signup data:', data);
-    console.log('Supabase signup error object:', signUpError);
+    console.log('Supabase signup data:', JSON.stringify(data, null, 2));
+    console.log('Supabase signup error object:', JSON.stringify(signUpError, null, 2));
 
     if (signUpError) {
       console.error('Supabase signup error:', signUpError);
@@ -110,7 +110,8 @@ const SignupPage = () => {
     if (data.user) {
       // User object exists. As per user request, if Supabase returns a user object
       // without an explicit signUpError, we treat it as if the email is already registered.
-      console.log('User object present and signUpError is null. Setting "Email already registered" message as requested:', data.user);
+      console.log('User object present and signUpError is null. Setting "Email already registered" message as requested. Returned user data:', JSON.stringify(data.user, null, 2));
+      console.log('Full Supabase data object when user is present and no signUpError:', JSON.stringify(data, null, 2));
       setError('Email already registered. Please log in or reset your password.');
       setMessage(null); // Clear any success message
       // Resetting fields is good practice
@@ -121,7 +122,7 @@ const SignupPage = () => {
       // Do not set user or redirect if we're showing this as an error for an existing email
     } else if (data.session === null && !data.user) {
       // No user object, and session is null. This strongly suggests email confirmation is required.
-      console.log('Signup pending confirmation (no user object, null session):', data);
+      console.log('Signup pending confirmation (no user object, null session). Full Supabase data object:', JSON.stringify(data, null, 2));
       setMessage('Signup initiated! Please check your email to confirm your account.');
       setEmail('');
       setPassword('');
