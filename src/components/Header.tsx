@@ -45,39 +45,39 @@ const Header = () => {
         <Link href="/" className="text-3xl font-bold hover:text-electric-blue transition-colors duration-300">
           TypingSpeedAcademy
         </Link>
-        <div className="flex items-center space-x-6 text-lg"> {/* Increased space-x for better separation */}
-          <Link href="/paid-courses" className="hover:text-electric-blue transition-colors duration-300 px-3 py-1.5 rounded-md text-base font-medium"> {/* Adjusted padding and font size */}
+        <div className="space-x-4 text-lg flex items-center">
+          <Link href="/paid-courses" className="hover:text-electric-blue transition-colors duration-300 px-2 py-1 rounded-md border border-transparent hover:border-electric-blue/50">
             Courses
           </Link>
-          <Link href="/typing-test" className="bg-violet text-white px-4 py-2 rounded-md hover:bg-electric-blue hover:text-dark-navy transition-colors duration-300 font-semibold text-sm shadow-md hover:shadow-lg transform hover:scale-105"> {/* Enhanced button style */}
+          <Link href="/typing-test" className="bg-violet text-subtle-white px-3 py-2 rounded-md hover:bg-electric-blue hover:text-dark-navy transition-colors duration-300 font-semibold text-sm">
             Start Typing Test
           </Link>
           {user ? (
-            <div className="flex items-center space-x-4"> {/* Group user items */}
+            <>
               {user.user_metadata?.username && (
-                <span className="text-slate-300 text-sm">
+                <span className="text-subtle-white mr-4">
                   Welcome, {user.user_metadata.username}
                 </span>
               )}
-              <Link href="/dashboard" className="text-slate-200 hover:text-white bg-slate-700/50 hover:bg-electric-blue/80 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300 border border-slate-600 hover:border-electric-blue">
+              <Link href="/dashboard" className="text-subtle-white px-4 py-2 rounded-md hover:bg-electric-blue hover:text-dark-navy transition-colors duration-300 font-semibold border border-electric-blue">
                 Dashboard
               </Link>
               <button
                 onClick={handleLogout}
-                className="bg-electric-blue text-dark-navy px-4 py-2 rounded-md hover:bg-violet hover:text-white transition-colors duration-300 font-semibold text-sm shadow-md hover:shadow-lg transform hover:scale-105"
+                className="bg-electric-blue text-dark-navy px-4 py-2 rounded-md hover:bg-violet hover:text-subtle-white transition-colors duration-300 font-semibold"
               >
                 Logout
               </button>
-            </div>
+            </>
           ) : (
-            <div className="flex items-center space-x-4"> {/* Group guest items */}
-              <Link href="/login" className="text-slate-200 hover:text-white bg-slate-700/50 hover:bg-electric-blue/80 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300 border border-slate-600 hover:border-electric-blue">
+            <>
+              <Link href="/login" className="text-subtle-white px-4 py-2 rounded-md hover:bg-electric-blue hover:text-dark-navy transition-colors duration-300 font-semibold border border-electric-blue">
                 Login
               </Link>
-              <Link href="/signup" className="bg-electric-blue text-dark-navy px-4 py-2 rounded-md hover:bg-violet hover:text-white transition-colors duration-300 font-semibold text-sm shadow-md hover:shadow-lg transform hover:scale-105">
+              <Link href="/signup" className="bg-electric-blue text-dark-navy px-4 py-2 rounded-md hover:bg-violet hover:text-subtle-white transition-colors duration-300 font-semibold">
                 Sign Up
               </Link>
-            </div>
+            </>
           )}
         </div>
       </nav>
