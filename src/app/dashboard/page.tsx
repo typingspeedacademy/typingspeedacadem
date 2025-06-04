@@ -187,7 +187,6 @@ export default function DashboardPage() {
 
           // Calculate analytics for the cards
           if (processedData.length > 0) {
-            setHasNoData(false); // User has data
             const latestEntry = processedData[processedData.length - 1];
             const totalAccuracy = processedData.reduce((sum, entry) => sum + Number(entry.accuracy), 0);
             const averageAccuracy = totalAccuracy / processedData.length;

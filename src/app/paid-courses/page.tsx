@@ -2,17 +2,43 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { createClient } from '@/utils/supabase/client';
 
 export default function PaidCoursesPage() {
+  const supabase = createClient();
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Here you would typically send the email to your backend/Supabase
-    console.log('Email submitted for notification:', email);
-    setSubmitted(true);
-    // setEmail(''); // Keep email for the thank you message
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const { data, error } = await supabase
+        .from('course_notifications')
+        .insert([{ email }])
+        .select();
+
+      if (error) {
+        if (error.code === '23505') { // Unique constraint violation code
+          setError('This email is already registered for notifications.');
+        } else {
+          setError(`Failed to subscribe: ${error.message}`);
+        }
+      } else {
+        setSuccess('Thanks! We\'ll notify you when courses are live.');
+        setSubmitted(true);
+      }
+    } catch (err: any) {
+      setError(`An unexpected error occurred: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,7 +59,7 @@ export default function PaidCoursesPage() {
           Get unlimited access for just <span className="text-3xl sm:text-4xl font-bold">$1.99</span>!
         </p>
 
-        {!submitted ? (
+        {!submitted && !success ? (
           <form onSubmit={handleSubmit} className="space-y-6">
             <p className="text-md sm:text-lg text-slate-200">
               Be the first to know when we launch! Enter your email below:
@@ -55,11 +81,30 @@ export default function PaidCoursesPage() {
             <button
               type="submit"
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-medium text-dark-navy bg-electric-blue hover:bg-violet hover:text-subtle-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-violet transition-all duration-300 transform hover:scale-105"
+              disabled={loading}
             >
-              Notify Me!
+              {loading ? 'Subscribing...' : 'Notify Me!'}
             </button>
           </form>
-        ) : (
+        ) : null}
+
+        {success && (
+          <div className="p-6 bg-green-500 bg-opacity-30 rounded-lg border border-green-400">
+            <p className="text-xl sm:text-2xl font-semibold text-green-300">
+              {success} <span className='font-bold text-subtle-white'>{email}</span>
+            </p>
+          </div>
+        )}
+
+        {error && (
+          <div className="p-6 bg-red-500 bg-opacity-30 rounded-lg border border-red-400">
+            <p className="text-xl sm:text-2xl font-semibold text-red-300">
+              {error}
+            </p>
+          </div>
+        )}
+
+        {submitted && !error && !success && (
           <div className="p-6 bg-green-500 bg-opacity-30 rounded-lg border border-green-400">
             <p className="text-xl sm:text-2xl font-semibold text-green-300">
               Thanks! We'll notify you at <span className='font-bold text-subtle-white'>{email}</span> when courses are live.
