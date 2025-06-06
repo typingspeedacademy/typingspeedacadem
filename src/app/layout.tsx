@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header"; // Import the Header component
 import Footer from '@/components/Footer'; // Import the Footer component
+import './globals.css';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,17 +14,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" className="h-full">
-      <body className={`${inter.className} bg-dark-navy text-subtle-white flex flex-col min-h-screen`}>
-        <Header /> {/* Add the Header component here */}
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
+    <html lang="en">
+      <body>
+        <Header />
+        <main>{children}</main>
+        <Footer /> {/* Add the Footer component here */} 
       </body>
     </html>
   );
