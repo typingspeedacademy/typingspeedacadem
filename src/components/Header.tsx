@@ -50,7 +50,7 @@ const Header = () => {
           </svg>
           TypingSpeedAcademy
         </Link>
-        <div className="hidden md:flex items-center space-x-5 text-base font-medium">
+        <div className="hidden md:flex items-center space-x-5 text-lg font-medium">
           <Link href="/typing-test" className="hover:text-cyan-400 transition-colors duration-300">
             Exercise
           </Link>
