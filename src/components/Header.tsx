@@ -44,13 +44,13 @@ const Header = () => {
       <nav 
         className="container mx-auto flex justify-between items-center bg-dark-navy/70 backdrop-blur-md text-white shadow-xl rounded-xl p-3 md:p-4"
       > 
-        <Link href="/" className="text-2xl font-bold hover:text-cyan-400 transition-colors duration-300 flex items-center">
+        <Link href="/" className="text-3xl font-bold hover:text-cyan-400 transition-colors duration-300 flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 mr-2 text-cyan-400">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
           </svg>
           TypingSpeedAcademy
         </Link>
-        <div className="hidden md:flex items-center space-x-5 text-sm font-medium">
+        <div className="hidden md:flex items-center space-x-5 text-base font-medium">
           <Link href="/typing-test" className="hover:text-cyan-400 transition-colors duration-300">
             Exercise
           </Link>
@@ -66,13 +66,13 @@ const Header = () => {
             <div className="flex items-center space-x-3">
               <Link 
                 href="/dashboard" 
-                className="text-gray-200 hover:text-white bg-cyan-600/50 hover:bg-cyan-500/80 px-4 py-2 rounded-lg text-xs font-medium transition-colors duration-300 border border-cyan-700 hover:border-cyan-500"
+                className="text-gray-200 hover:text-white bg-cyan-600/50 hover:bg-cyan-500/80 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300 border border-cyan-700 hover:border-cyan-500"
               >
                 Dashboard
               </Link>
               <button
                 onClick={handleLogout}
-                className="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition-colors duration-300 font-semibold text-xs shadow-md hover:shadow-lg transform hover:scale-105"
+                className="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition-colors duration-300 font-semibold text-sm shadow-md hover:shadow-lg transform hover:scale-105"
               >
                 Logout
               </button>
@@ -80,7 +80,7 @@ const Header = () => {
           ) : (
             <Link 
               href="/signup" 
-              className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-5 py-2.5 rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 font-semibold text-sm shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-5 py-2.5 rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Sign Up
             </Link>
