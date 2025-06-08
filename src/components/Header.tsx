@@ -40,45 +40,25 @@ const Header = () => {
   };
 
   return (
-    <header className="py-4 sticky top-0 z-50 px-4 md:px-8"> {/* Added padding for spacing from screen edges */}
+    <header className="py-4 sticky top-0 z-50 px-4 md:px-8"> 
       <nav 
-        className="container mx-auto flex justify-between items-center bg-slate-800/80 backdrop-blur-md text-white shadow-xl rounded-xl p-3 md:p-4"
-      > {/* Modern, rounded, semi-transparent background */}
+        className="container mx-auto flex justify-between items-center backdrop-blur-md text-white shadow-xl rounded-xl p-3 md:p-4"
+      > 
         <Link href="/" className="text-2xl font-bold hover:text-cyan-400 transition-colors duration-300 flex items-center">
-          {/* You can replace this with an SVG logo if you have one */}
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 mr-2 text-cyan-400">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
           </svg>
-          Taskk {/* Updated Name as per the second image example */}
+          TypingSpeedAcademy
         </Link>
         <div className="hidden md:flex items-center space-x-5 text-sm font-medium">
-          <Link href="/" className="hover:text-cyan-400 transition-colors duration-300">
-            Home
+          <Link href="/typing-test" className="hover:text-cyan-400 transition-colors duration-300">
+            Exercise
           </Link>
-          {/* Example of a dropdown menu item - you'll need a dropdown component for this */}
-          <div className="relative group">
-            <button className="hover:text-cyan-400 transition-colors duration-300 flex items-center">
-              Products
-              <svg className="w-4 h-4 ml-1 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
-            </button>
-            {/* Dropdown content - hidden by default */}
-            <div className="absolute left-0 mt-2 w-48 bg-slate-700/90 backdrop-blur-md rounded-md shadow-lg py-1 hidden group-hover:block z-20">
-              <Link href="/products/feature-a" className="block px-4 py-2 text-sm text-gray-200 hover:bg-cyan-500 hover:text-white transition-colors duration-200">Feature A</Link>
-              <Link href="/products/feature-b" className="block px-4 py-2 text-sm text-gray-200 hover:bg-cyan-500 hover:text-white transition-colors duration-200">Feature B</Link>
-            </div>
-          </div>
-          <div className="relative group">
-            <button className="hover:text-cyan-400 transition-colors duration-300 flex items-center">
-              Resources
-              <svg className="w-4 h-4 ml-1 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
-            </button>
-            <div className="absolute left-0 mt-2 w-48 bg-slate-700/90 backdrop-blur-md rounded-md shadow-lg py-1 hidden group-hover:block z-20">
-              <Link href="/resources/blog" className="block px-4 py-2 text-sm text-gray-200 hover:bg-cyan-500 hover:text-white transition-colors duration-200">Blog</Link>
-              <Link href="/resources/docs" className="block px-4 py-2 text-sm text-gray-200 hover:bg-cyan-500 hover:text-white transition-colors duration-200">Documentation</Link>
-            </div>
-          </div>
-          <Link href="/pricing" className="hover:text-cyan-400 transition-colors duration-300">
-            Pricing
+          <Link href="/paid-courses" className="hover:text-cyan-400 transition-colors duration-300">
+            Course
+          </Link>
+          <Link href="/about-us" className="hover:text-cyan-400 transition-colors duration-300">
+            About Us
           </Link>
         </div>
         <div className="flex items-center space-x-3">
@@ -105,7 +85,6 @@ const Header = () => {
               Sign Up
             </Link>
           )}
-          {/* Mobile menu button (hamburger icon) - you would need to implement the toggle logic */}
           <div className="md:hidden">
             <button className="text-white focus:outline-none">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
@@ -116,10 +95,9 @@ const Header = () => {
       {/* Mobile menu - hidden by default, shown when mobile button is clicked */}
       {/* You would need state to manage the visibility of this mobile menu */}
       {/* <div className="md:hidden bg-slate-800/95 backdrop-blur-md rounded-b-lg mx-4 p-4 space-y-2">
-        <Link href="/" className="block hover:text-cyan-400 transition-colors duration-300">Home</Link>
-        <Link href="/products" className="block hover:text-cyan-400 transition-colors duration-300">Products</Link> 
-        <Link href="/resources" className="block hover:text-cyan-400 transition-colors duration-300">Resources</Link>
-        <Link href="/pricing" className="block hover:text-cyan-400 transition-colors duration-300">Pricing</Link>
+        <Link href="/typing-test" className="block hover:text-cyan-400 transition-colors duration-300">Exercise</Link>
+        <Link href="/paid-courses" className="block hover:text-cyan-400 transition-colors duration-300">Course</Link> 
+        <Link href="/about-us" className="block hover:text-cyan-400 transition-colors duration-300">About Us</Link>
       </div> */}
     </header>
   );
