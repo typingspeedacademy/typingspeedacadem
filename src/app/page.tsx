@@ -6,7 +6,7 @@ import { ChevronRightIcon } from '@heroicons/react/24/solid';
 // Enhanced Fluid Visual Background
 const FluidVisualBackground = () => {
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden bg-dark-navy">
+    <div className="absolute inset-0 z-0 overflow-hidden">
       {/* More dynamic and layered abstract shapes */}
       <div className="absolute -top-1/4 -left-1/4 w-3/4 h-3/4 bg-gradient-to-br from-electric-blue/30 to-violet/30 opacity-50 rounded-full filter blur-3xl animate-sway-slow"></div>
       <div className="absolute -bottom-1/4 -right-1/4 w-2/3 h-2/3 bg-gradient-to-tl from-violet/40 to-electric-blue/20 opacity-60 rounded-full filter blur-3xl animate-sway-slow animation-delay-3000"></div>
