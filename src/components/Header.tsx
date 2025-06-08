@@ -45,12 +45,10 @@ const Header = () => {
         className="container mx-auto flex justify-between items-center bg-dark-navy/70 backdrop-blur-md text-white shadow-xl rounded-xl p-3 md:p-4"
       > 
         <Link href="/" className="text-3xl font-bold hover:text-cyan-400 transition-colors duration-300 flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 mr-2 text-cyan-400">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-          </svg>
+          {/* SVG logo removed as per request */}
           TypingSpeedAcademy
         </Link>
-        <div className="hidden md:flex items-center space-x-5 text-lg font-medium">
+        <div className="hidden md:flex flex-grow justify-center items-center space-x-5 text-lg font-medium">
           <Link href="/typing-test" className="hover:text-cyan-400 transition-colors duration-300">
             Exercise
           </Link>
