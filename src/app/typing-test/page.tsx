@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { ChevronRightIcon, SparklesIcon, ClockIcon, ArrowTrendingUpIcon, ShieldExclamationIcon } from '@heroicons/react/24/outline'; // Using outline icons for a cleaner look
+import { ChevronRightIcon, SparklesIcon, ClockIcon, ArrowTrendingUpIcon, ShieldExclamationIcon, PlayIcon, PauseIcon, ArrowPathIcon } from '@heroicons/react/24/outline'; // Using outline icons for a cleaner look
+import { createClient } from '@/utils/supabase/client'; // Added Supabase client
+import type { User } from '@supabase/supabase-js'; // Added User type
 
 const freeTierFeatures = [
   {
@@ -42,7 +44,31 @@ const TypingTestPage = () => {
   const [testCompleted, setTestCompleted] = useState(false);
 
   const [duration, setDuration] = useState(60); // seconds
+  const [timeLeft, setTimeLeft] = useState(duration);
   const [difficulty, setDifficulty] = useState('medium');
+  const [user, setUser] = useState<User | null>(null); // Added user state
+  const supabase = createClient(); // Initialize Supabase client
+
+  // Fetch user
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      setUser(currentUser);
+    };
+    getUser();
+  }, [supabase]);
+
+  // Timer logic
+  useEffect(() => {
+    if (testActive && timeLeft > 0) {
+      const timerId = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+      return () => clearInterval(timerId);
+    } else if (timeLeft === 0 && testActive) {
+      endTest();
+    }
+  }, [testActive, timeLeft]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (!testActive && !testCompleted) {
@@ -72,13 +98,50 @@ const TypingTestPage = () => {
     setEndTime(null);
     setTestActive(true);
     setTestCompleted(false);
+    setTimeLeft(duration); // Reset timer
+  };
+
+  const saveTestAnalytics = async () => {
+    if (!user || !testCompleted || !startTime || !endTime) return;
+
+    const wpm = calculateWPM();
+    const accuracy = calculateAccuracy();
+    const timeTakenSeconds = (endTime - startTime) / 1000;
+
+    const { error } = await supabase
+      .from('user_typing_analytics')
+      .insert([
+        {
+          user_id: user.id,
+          wpm: wpm,
+          accuracy: accuracy,
+          errors: errors,
+          duration_seconds: timeTakenSeconds,
+          text_used: text, // Optional: store the text used for the test
+          difficulty: difficulty, // Optional: store difficulty
+        },
+      ]);
+
+    if (error) {
+      console.error('Error saving typing analytics:', error);
+    } else {
+      console.log('Typing analytics saved successfully!');
+    }
   };
 
   const endTest = () => {
     setEndTime(Date.now());
     setTestActive(false);
     setTestCompleted(true);
+    // saveTestAnalytics will be called in a useEffect dependent on testCompleted
   };
+
+  // Save analytics when test is completed
+  useEffect(() => {
+    if (testCompleted) {
+      saveTestAnalytics();
+    }
+  }, [testCompleted]); // Dependencies: testCompleted, saveTestAnalytics (if it's memoized with useCallback)
 
   const calculateWPM = () => {
     if (!startTime || !endTime || text.length === 0) return 0;
@@ -105,6 +168,7 @@ const TypingTestPage = () => {
     setErrors(0);
     setTestActive(false);
     setTestCompleted(false);
+    setTimeLeft(duration); // Reset timer on manual reset too
   };
 
   const handleSettingsChange = (newDuration: number, newDifficulty: string) => {
@@ -119,6 +183,13 @@ const TypingTestPage = () => {
       <h1 className="text-4xl sm:text-5xl font-semibold text-center text-slate-800 mb-8 sm:mb-12">
         Typing <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Challenge</span>
       </h1>
+      {/* Add a message if user is not logged in */} 
+      {!user && (
+        <div className="w-full max-w-3xl bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md shadow-md mb-6" role="alert">
+          <p className="font-bold">Heads up!</p>
+          <p>You are not logged in. Your test results will not be saved. <Link href="/login" className="font-semibold underline hover:text-yellow-800">Login</Link> or <Link href="/signup" className="font-semibold underline hover:text-yellow-800">Signup</Link> to save your progress.</p>
+        </div>
+      )}
 
       <div className="w-full max-w-3xl bg-white/70 backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-xl border border-sky-200 mb-8">
         <SettingsPanel 
@@ -126,6 +197,9 @@ const TypingTestPage = () => {
           currentDuration={duration} 
           currentDifficulty={difficulty} 
         />
+        <div className="mt-4 text-center text-2xl font-semibold text-sky-700">
+          Time Left: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+        </div>
       </div>
 
       <div className="w-full max-w-3xl bg-white/70 backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-xl border border-sky-200 mb-8">
