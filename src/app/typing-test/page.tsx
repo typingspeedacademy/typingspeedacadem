@@ -134,9 +134,9 @@ const TypingTestPage = () => {
     if (!user) return;
 
     const wordsTyped = userInput.trim().split(/\s+/).filter(Boolean).length;
-    const durationInMinutes = testDuration / 60;
+    const durationInMinutes = duration / 60; // Changed testDuration to duration
     const calculatedWpm = durationInMinutes > 0 ? Math.round(wordsTyped / durationInMinutes) : 0;
-    const calculatedAccuracy = textToType.length > 0 ? Math.round(((textToType.length - errors) / textToType.length) * 100) : 0;
+    const calculatedAccuracy = text.length > 0 ? Math.round(((text.length - errors) / text.length) * 100) : 0; // Changed textToType to text
 
     const { error } = await supabase.from('user_typing_analytics').insert([
       {
@@ -144,11 +144,11 @@ const TypingTestPage = () => {
         wpm: calculatedWpm,
         accuracy: calculatedAccuracy,
         errors: errors,
-        test_duration_seconds: testDuration,
+        test_duration_seconds: duration, // Changed testDuration to duration
         text_difficulty: difficulty,
         text_language: language, // Save the language
         text_typed: userInput,
-        original_text: textToType,
+        original_text: text, // Changed textToType to text
       },
     ]);
     if (error) {
@@ -186,14 +186,19 @@ const TypingTestPage = () => {
   };
 
   const resetTest = () => {
-    getNewText(difficulty, language); // Ensure new text respects current language
+    getNewText(); // Call getNewText without arguments as it uses state for difficulty and language
   };
 
-  const handleSettingsChange = (duration: number, newDifficulty: string, newLanguage: string) => {
-    setTestDuration(duration);
+  const handleSettingsChange = (newDuration: number, newDifficulty: string, newLanguage: string) => { // Renamed duration to newDuration for clarity
+    setDuration(newDuration); // Changed setTestDuration to setDuration
     setDifficulty(newDifficulty);
     setLanguage(newLanguage as 'en' | 'es' | 'ar'); // Cast and set language
-    resetTest(); // Reset with new settings
+    // getNewText will be called by the useEffect due to dependency change on duration, difficulty, or language
+    // However, to ensure immediate reset with new settings, explicitly call resetTest or getNewText.
+    // For consistency with previous logic, let's ensure getNewText is called after settings update.
+    // The getNewText in useEffect depends on `duration` which is updated here.
+    // Explicitly calling resetTest() which calls getNewText() ensures the text is refreshed immediately.
+    resetTest(); 
   };
 
   return (
