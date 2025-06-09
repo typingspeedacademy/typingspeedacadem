@@ -40,22 +40,22 @@ const Header = () => {
   };
 
   return (
-    <header className="py-4 sticky top-0 z-50 px-4 md:px-8"> 
+    <header className="py-4 sticky top-0 z-50 px-4 md:px-8 bg-gradient-to-br from-slate-50 to-sky-100">
       <nav 
-        className="container mx-auto flex justify-between items-center backdrop-blur-md text-white shadow-xl rounded-xl p-3 md:p-4"
+        className="container mx-auto flex justify-between items-center bg-white/70 backdrop-blur-lg text-slate-700 shadow-lg rounded-xl p-3 md:p-4"
       > 
-        <Link href="/" className="text-3xl font-bold hover:text-cyan-400 transition-colors duration-300 flex items-center">
+        <Link href="/" className="text-3xl font-bold text-sky-600 hover:text-indigo-500 transition-colors duration-300 flex items-center">
           {/* SVG logo removed as per request */}
           TypingSpeedAcademy
         </Link>
-        <div className="hidden md:flex flex-grow justify-center items-center space-x-5 text-lg font-medium">
-          <Link href="/typing-test" className="hover:text-cyan-400 transition-colors duration-300">
+        <div className="hidden md:flex flex-grow justify-center items-center space-x-5 text-lg font-medium text-slate-600">
+          <Link href="/typing-test" className="hover:text-sky-500 transition-colors duration-300">
             Exercise
           </Link>
-          <Link href="/paid-courses" className="hover:text-cyan-400 transition-colors duration-300">
+          <Link href="/paid-courses" className="hover:text-sky-500 transition-colors duration-300">
             Course
           </Link>
-          <Link href="/about-us" className="hover:text-cyan-400 transition-colors duration-300">
+          <Link href="/about-us" className="hover:text-sky-500 transition-colors duration-300">
             About Us
           </Link>
         </div>
@@ -64,7 +64,7 @@ const Header = () => {
             <div className="flex items-center space-x-3">
               <Link 
                 href="/dashboard" 
-                className="text-gray-200 hover:text-white bg-cyan-600/50 hover:bg-cyan-500/80 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300 border border-cyan-700 hover:border-cyan-500"
+                className="text-sky-700 hover:text-white bg-sky-100 hover:bg-sky-500 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300 border border-sky-300 hover:border-sky-500 shadow-sm hover:shadow-md"
               >
                 Dashboard
               </Link>
@@ -78,13 +78,13 @@ const Header = () => {
           ) : (
             <Link 
               href="/signup" 
-              className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-5 py-2.5 rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="bg-gradient-to-r from-sky-500 to-indigo-500 text-white px-5 py-2.5 rounded-lg hover:from-sky-600 hover:to-indigo-600 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Sign Up
             </Link>
           )}
           <div className="md:hidden">
-            <button className="text-white focus:outline-none">
+            <button className="text-slate-600 focus:outline-none">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
             </button>
           </div>
