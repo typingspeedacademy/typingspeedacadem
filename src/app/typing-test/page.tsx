@@ -134,9 +134,9 @@ const TypingTestPage = () => {
     if (!user) return;
 
     const wordsTyped = userInput.trim().split(/\s+/).filter(Boolean).length;
-    const durationInMinutes = duration / 60; // Changed testDuration to duration
+    const durationInMinutes = duration / 60;
     const calculatedWpm = durationInMinutes > 0 ? Math.round(wordsTyped / durationInMinutes) : 0;
-    const calculatedAccuracy = text.length > 0 ? Math.round(((text.length - errors) / text.length) * 100) : 0; // Changed textToType to text
+    const calculatedAccuracy = text.length > 0 ? Math.round(((text.length - errors) / text.length) * 100) : 0;
 
     const { error } = await supabase.from('user_typing_analytics').insert([
       {
@@ -144,11 +144,11 @@ const TypingTestPage = () => {
         wpm: calculatedWpm,
         accuracy: calculatedAccuracy,
         errors: errors,
-        test_duration_seconds: duration, // Changed testDuration to duration
-        text_difficulty: difficulty,
-        text_language: language, // Save the language
-        text_typed: userInput,
-        original_text: text, // Changed textToType to text
+        // test_duration_seconds: duration, // Removed as per user request
+        // text_difficulty: difficulty, // Removed
+        // text_language: language, // Removed
+        // text_typed: userInput, // Removed
+        // original_text: text, // Removed
       },
     ]);
     if (error) {
