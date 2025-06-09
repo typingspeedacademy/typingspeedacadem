@@ -47,25 +47,28 @@ export default function HomePage() {
   ];
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center p-6 sm:p-12 md:p-24 text-slate-200 overflow-hidden">
-      <FluidVisualBackground />
-      <div className="relative z-10 text-center space-y-8 max-w-4xl mx-auto">
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight">
-          Master the Art of <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">Fast Typing</span>
+    <main className="relative flex min-h-screen flex-col items-center justify-center p-6 sm:p-12 md:p-24 text-gray-700 overflow-hidden bg-gradient-to-br from-slate-50 to-sky-100">
+      {/* <FluidVisualBackground /> */}
+      {/* Replaced FluidVisualBackground with a static gradient for a gentler feel */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-sky-50 to-indigo-100 opacity-80"></div>
+
+      <div className="relative z-10 text-center space-y-10 max-w-4xl mx-auto">
+        <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-slate-800">
+          Master the Art of <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Fast Typing</span>
         </h1>
-        <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto">
+        <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto">
           Unlock your potential and type like never before. Join TypingSpeedAcademy and transform your skills.
         </p>
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-5 mt-10">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mt-12">
           <Link 
             href="/typing-test" 
-            className="group text-md font-medium px-7 py-3.5 rounded-lg bg-gradient-to-r from-sky-500 to-cyan-400 text-white shadow-lg hover:shadow-xl hover:from-sky-600 hover:to-cyan-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-60 transition-all duration-300 ease-in-out flex items-center justify-center"
+            className="group text-lg font-medium px-8 py-4 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 text-white shadow-lg hover:shadow-xl hover:from-sky-600 hover:to-indigo-600 focus:outline-none focus:ring-4 focus:ring-sky-300 transition-all duration-300 ease-in-out flex items-center justify-center"
           >
             Start for Free <ChevronRightIcon className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link 
             href="/paid-courses"
-            className="group text-md font-medium px-7 py-3.5 rounded-lg bg-transparent border-2 border-sky-500 text-sky-400 hover:bg-sky-500 hover:text-white shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-60 transition-all duration-300 ease-in-out flex items-center justify-center"
+            className="group text-lg font-medium px-8 py-4 rounded-xl bg-white border-2 border-sky-500 text-sky-600 hover:bg-sky-50 hover:text-sky-700 shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-sky-300 transition-all duration-300 ease-in-out flex items-center justify-center"
           >
             See Premium Features
           </Link>
@@ -73,56 +76,56 @@ export default function HomePage() {
       </div>
 
       {/* Placeholder for Interactive Mini-Typing Demo */}
-      <div className="relative z-10 mt-16 w-full max-w-2xl mx-auto p-8 bg-slate-800/30 backdrop-blur-md rounded-xl shadow-xl text-center">
-        <h2 className="text-2xl font-semibold text-slate-100 mb-5">Try a Quick Sample!</h2>
+      <div className="relative z-10 mt-20 w-full max-w-2xl mx-auto p-10 bg-white/70 backdrop-blur-lg rounded-2xl shadow-xl text-center">
+        <h2 className="text-3xl font-semibold text-slate-700 mb-6">Try a Quick Sample!</h2>
         <p className="text-slate-400 mb-4">[Interactive typing demo component will go here]</p>
         {/* Example: <MiniTypingTest /> */}
         <p className="text-xs text-slate-500">This is a placeholder for a mini typing test.</p>
       </div>
 
-      <div className="relative z-10 mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto w-full">
+      <div className="relative z-10 mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto w-full">
         {benefits.map((benefit) => (
-          <div key={benefit.title} className="bg-slate-800/30 backdrop-blur-md p-6 rounded-xl shadow-lg hover:shadow-sky-500/20 hover:border-sky-500/50 border border-transparent transition-all duration-300 transform hover:-translate-y-1">
-            <div className="text-4xl mb-3 text-sky-400">{benefit.icon}</div>
-            <h3 className="text-xl font-semibold text-slate-100 mb-2">{benefit.title}</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">{benefit.description}</p>
+          <div key={benefit.title} className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl hover:shadow-sky-500/30 border border-transparent hover:border-sky-300 transition-all duration-300 transform hover:-translate-y-1.5">
+            <div className="text-5xl mb-4 text-sky-500">{benefit.icon}</div>
+            <h3 className="text-2xl font-semibold text-slate-700 mb-3">{benefit.title}</h3>
+            <p className="text-slate-600 text-base leading-relaxed">{benefit.description}</p>
           </div>
         ))}
       </div>
 
       {/* How It Works Section */}
-      <section className="relative z-10 mt-24 w-full max-w-5xl mx-auto py-12">
-        <h2 className="text-3xl sm:text-4xl font-semibold text-center text-slate-100 mb-12">
-          How <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">It Works</span>
+      <section className="relative z-10 mt-28 w-full max-w-5xl mx-auto py-16">
+        <h2 className="text-4xl sm:text-5xl font-semibold text-center text-slate-800 mb-20">
+          How <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">It Works</span>
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {howItWorksSteps.map((step) => (
-            <div key={step.id} className="bg-slate-800/30 backdrop-blur-md p-6 text-center rounded-xl shadow-lg hover:shadow-sky-500/20 hover:border-sky-500/50 border border-transparent transition-all duration-300 transform hover:-translate-y-1">
-              <div className="text-4xl mb-3 text-sky-400">{step.icon}</div>
-              <h3 className="text-lg font-medium text-slate-100 mb-2">{step.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{step.description}</p>
+            <div key={step.id} className="bg-white/70 backdrop-blur-lg p-6 text-center rounded-2xl shadow-xl hover:shadow-sky-500/30 border border-transparent hover:border-sky-300 transition-all duration-300 transform hover:-translate-y-1.5">
+              <div className="text-4xl mb-4 text-sky-500">{step.icon}</div>
+              <h3 className="text-xl font-medium text-slate-700 mb-2">{step.title}</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">{step.description}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Featured Course Snippet Section */}
-      <section className="relative z-10 mt-24 w-full max-w-5xl mx-auto py-12">
-        <h2 className="text-3xl sm:text-4xl font-semibold text-center text-slate-100 mb-12">
-          Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">Course</span>
+      <section className="relative z-10 mt-28 w-full max-w-5xl mx-auto py-16">
+        <h2 className="text-4xl sm:text-5xl font-semibold text-center text-slate-800 mb-20">
+          Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Course</span>
         </h2>
-        <div className="bg-slate-800/30 backdrop-blur-md p-8 md:p-10 rounded-xl shadow-xl flex flex-col md:flex-row items-center gap-8 hover:shadow-sky-500/20 hover:border-sky-500/50 border border-transparent transition-all duration-300">
-          <div className="w-full md:w-1/3 h-48 md:h-60 bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg flex items-center justify-center shadow-lg">
-            <span className="text-5xl text-sky-400">🚀</span> 
+        <div className="bg-white/80 backdrop-blur-lg p-10 md:p-12 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center gap-10 hover:shadow-sky-500/30 border border-transparent hover:border-sky-300 transition-all duration-300">
+          <div className="w-full md:w-1/3 h-52 md:h-64 bg-gradient-to-br from-sky-100 to-indigo-200 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-6xl text-sky-600">🚀</span> 
           </div>
           <div className="w-full md:w-2/3 text-center md:text-left">
-            <h3 className="text-2xl font-semibold text-slate-100 mb-3">Advanced Typing Techniques</h3>
-            <p className="text-slate-400 mb-5 leading-relaxed">
+            <h3 className="text-3xl font-semibold text-slate-700 mb-4">Advanced Typing Techniques</h3>
+            <p className="text-slate-600 text-lg mb-6 leading-relaxed">
               Master complex patterns, improve accuracy under pressure, and learn ergonomic best practices to type faster and more comfortably than ever before. This course is designed for those ready to take their skills to a professional level.
             </p>
             <Link 
               href="/courses/advanced-typing"
-              className="inline-block text-md font-medium px-7 py-3 rounded-lg bg-sky-500 text-white shadow-md hover:bg-sky-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-60 transition-all duration-300 ease-in-out"
+              className="inline-block text-lg font-medium px-8 py-4 rounded-xl bg-sky-500 text-white shadow-md hover:bg-sky-600 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-sky-300 transition-all duration-300 ease-in-out"
             >
               Learn More
             </Link>
@@ -131,24 +134,24 @@ export default function HomePage() {
       </section>
 
       {/* Leaderboard Teaser Section - Modified to "Coming Soon" */}
-      <section className="relative z-10 mt-24 w-full max-w-4xl mx-auto py-12 text-center">
-        <h2 className="text-3xl sm:text-4xl font-semibold text-slate-100 mb-10">
-          Global <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">Leaderboard</span>
+      <section className="relative z-10 mt-28 w-full max-w-4xl mx-auto py-16 text-center">
+        <h2 className="text-4xl sm:text-5xl font-semibold text-slate-800 mb-16">
+          Global <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Leaderboard</span>
         </h2>
-        <div className="relative bg-slate-800/30 backdrop-blur-md p-8 rounded-xl shadow-xl mb-8">
-          <div className="absolute inset-0 bg-slate-800/70 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center z-20 p-4">
-            <h3 className="text-2xl font-semibold text-sky-400 mb-3">Coming Soon!</h3>
-            <p className="text-lg text-slate-300 mb-5">Unlock leaderboards and more with our premium courses.</p>
+        <div className="relative bg-white/70 backdrop-blur-lg p-10 rounded-2xl shadow-xl mb-10">
+          <div className="absolute inset-0 bg-slate-100/80 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center z-20 p-6">
+            <h3 className="text-3xl font-semibold text-sky-600 mb-4">Coming Soon!</h3>
+            <p className="text-xl text-slate-600 mb-8">Unlock leaderboards and more with our premium courses.</p>
             <Link 
               href="/paid-courses"
-              className="inline-block text-md font-medium px-8 py-3.5 rounded-lg bg-gradient-to-r from-sky-500 to-cyan-400 text-white shadow-lg hover:shadow-xl hover:from-sky-600 hover:to-cyan-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-60 transition-all duration-300 ease-in-out"
+              className="inline-block text-lg font-medium px-10 py-4 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 text-white shadow-lg hover:shadow-xl hover:from-sky-600 hover:to-indigo-600 focus:outline-none focus:ring-4 focus:ring-sky-300 transition-all duration-300 ease-in-out"
             >
               Explore Premium Courses
             </Link>
           </div>
           {/* Blurred content underneath */}
-          <h3 className="text-xl font-semibold text-slate-100 mb-5 opacity-20">Top Typer Spotlight</h3>
-          <div className="space-y-2 text-slate-300 opacity-20">
+          <h3 className="text-2xl font-semibold text-slate-700 mb-6 opacity-10">Top Typer Spotlight</h3>
+          <div className="space-y-3 text-slate-600 opacity-10">
             <p>1. SpeedyKeys - 150 WPM</p>
             <p>2. TypeMasterFlex - 145 WPM</p>
             <p>3. QuickFingers - 142 WPM</p>
@@ -259,33 +262,33 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Section Placeholder */}
-      <section className="relative z-10 mt-24 w-full max-w-3xl mx-auto py-12">
-        <h2 className="text-3xl sm:text-4xl font-semibold text-center text-slate-100 mb-12">
-          Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">Questions</span>
+      <section className="relative z-10 mt-28 w-full max-w-3xl mx-auto py-16">
+        <h2 className="text-4xl sm:text-5xl font-semibold text-center text-slate-800 mb-20">
+          Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Questions</span>
         </h2>
-        <div className="space-y-5">
-          <div className="bg-slate-800/30 backdrop-blur-md p-6 rounded-xl shadow-lg">
-            <h3 className="text-lg font-medium text-slate-100 mb-2">What is TypingSpeedAcademy?</h3>
-            <p className="text-slate-400 text-sm">TypingSpeedAcademy is an online platform dedicated to helping users improve their typing speed and accuracy through a variety of exercises, courses, and challenges.</p>
+        <div className="space-y-6">
+          <div className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl">
+            <h3 className="text-xl font-medium text-slate-700 mb-3">What is TypingSpeedAcademy?</h3>
+            <p className="text-slate-600 text-base">TypingSpeedAcademy is an online platform dedicated to helping users improve their typing speed and accuracy through a variety of exercises, courses, and challenges.</p>
           </div>
-          <div className="bg-slate-800/30 backdrop-blur-md p-6 rounded-xl shadow-lg">
-            <h3 className="text-lg font-medium text-slate-100 mb-2">How do I improve my typing speed?</h3>
-            <p className="text-slate-400 text-sm">Consistent practice is key! Utilize our targeted exercises, focus on accuracy first, then speed. Our platform provides detailed feedback to help you identify areas for improvement.</p>
+          <div className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl">
+            <h3 className="text-xl font-medium text-slate-700 mb-3">How do I improve my typing speed?</h3>
+            <p className="text-slate-600 text-base">Consistent practice is key! Utilize our targeted exercises, focus on accuracy first, then speed. Our platform provides detailed feedback to help you identify areas for improvement.</p>
           </div>
-          <div className="bg-slate-800/30 backdrop-blur-md p-6 rounded-xl shadow-lg">
-            <h3 className="text-lg font-medium text-slate-100 mb-2">Are there any free courses or trials?</h3>
-            <p className="text-slate-400 text-sm">Yes! We offer a range of free exercises and a basic trial to get you started. Premium features and advanced courses are available with a subscription.</p>
+          <div className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl">
+            <h3 className="text-xl font-medium text-slate-700 mb-3">Are there any free courses or trials?</h3>
+            <p className="text-slate-600 text-base">Yes! We offer a range of free exercises and a basic trial to get you started. Premium features and advanced courses are available with a subscription.</p>
           </div>
-          <div className="bg-slate-800/30 backdrop-blur-md p-6 rounded-xl shadow-lg">
-            <h3 className="text-lg font-medium text-slate-100 mb-2">Can I track my progress?</h3>
-            <p className="text-slate-400 text-sm">Absolutely! TypingSpeedAcademy provides detailed analytics, including WPM (Words Per Minute), accuracy charts, and progress over time, so you can see how you're improving.</p>
+          <div className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl">
+            <h3 className="text-xl font-medium text-slate-700 mb-3">Can I track my progress?</h3>
+            <p className="text-slate-600 text-base">Absolutely! TypingSpeedAcademy provides detailed analytics, including WPM (Words Per Minute), accuracy charts, and progress over time, so you can see how you're improving.</p>
           </div>
-          <div className="bg-slate-800/30 backdrop-blur-md p-6 rounded-xl shadow-lg">
-            <h3 className="text-lg font-medium text-slate-100 mb-2">Is there a competitive aspect?</h3>
-            <p className="text-slate-400 text-sm">Yes, you can compete with other users on our global leaderboards. Challenge yourself and see how you rank against typists from around the world!</p>
+          <div className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl">
+            <h3 className="text-xl font-medium text-slate-700 mb-3">Is there a competitive aspect?</h3>
+            <p className="text-slate-600 text-base">Yes, you can compete with other users on our global leaderboards. Challenge yourself and see how you rank against typists from around the world!</p>
           </div>
         </div>
-        <p className="text-center text-slate-500 mt-8 text-sm">More questions? <Link href="/contact" className="text-sky-400 hover:underline">Contact us</Link>.</p>
+        <p className="text-center text-slate-500 mt-10 text-base">More questions? <Link href="/contact" className="text-sky-600 hover:underline">Contact us</Link>.</p>
       </section>
 
       {/* Closing Call to Action */}
