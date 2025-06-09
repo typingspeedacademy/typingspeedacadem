@@ -37,7 +37,14 @@ export default function HomePage() {
     { title: "Boost Your Speed", description: "Dramatically increase your WPM with targeted exercises.", icon: "⚡" },
     { title: "Track Your Progress", description: "Monitor your improvement with detailed analytics.", icon: "📊" },
     { title: "Compete Globally", description: "Challenge typists worldwide and climb the leaderboards.", icon: "🌍" },
-  ]; // Ensure this line ends with a semicolon
+  ];
+
+  const howItWorksSteps = [
+    { id: 1, title: "Sign Up Free", description: "Create your account in seconds and start your journey.", icon: "👤" },
+    { id: 2, title: "Practice Daily", description: "Engage with tailored exercises and fun challenges.", icon: "⌨️" },
+    { id: 3, title: "Track & Improve", description: "See detailed stats and watch your skills grow.", icon: "📈" },
+    { id: 4, title: "Conquer All Levels", description: "Unlock achievements and become a typing master.", icon: "🏆" },
+  ];
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center p-6 sm:p-12 md:p-24 text-subtle-white overflow-hidden">
@@ -65,6 +72,14 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Placeholder for Interactive Mini-Typing Demo */}
+      <div className="relative z-10 mt-16 w-full max-w-2xl mx-auto p-8 glass-panel text-center">
+        <h2 className="text-3xl font-bold text-subtle-white mb-6">Try a Quick Sample!</h2>
+        <p className="text-slate-400 mb-4">[Interactive typing demo component will go here]</p>
+        {/* Example: <MiniTypingTest /> */}
+        <p className="text-xs text-slate-500">This is a placeholder for a mini typing test.</p>
+      </div>
+
       <div className="relative z-10 mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto w-full">
         {benefits.map((benefit) => (
           <div key={benefit.title} className="glass-panel p-8 text-center hover:border-electric-blue/70 transition-all duration-300 transform hover:-translate-y-1">
@@ -74,6 +89,73 @@ export default function HomePage() {
           </div>
         ))}
       </div>
+
+      {/* How It Works Section */}
+      <section className="relative z-10 mt-24 w-full max-w-5xl mx-auto py-16">
+        <h2 className="text-4xl font-bold text-center text-subtle-white mb-16">
+          How <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-violet">It Works</span>
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {howItWorksSteps.map((step) => (
+            <div key={step.id} className="glass-panel p-6 text-center hover:border-electric-blue/70 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="text-5xl mb-4 text-electric-blue glow-text-hard">{step.icon}</div>
+              <h3 className="text-xl font-semibold text-subtle-white mb-2">{step.title}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">{step.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Featured Course Snippet Section */}
+      <section className="relative z-10 mt-24 w-full max-w-5xl mx-auto py-16">
+        <h2 className="text-4xl font-bold text-center text-subtle-white mb-16">
+          Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-violet">Course</span>
+        </h2>
+        <div className="glass-panel p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 hover:border-electric-blue/70 transition-all duration-300">
+          <div className="w-full md:w-1/3 h-48 md:h-64 bg-gradient-to-br from-dark-navy to-slate-800 rounded-lg flex items-center justify-center shadow-xl">
+            {/* Placeholder for course image or icon */}
+            <span className="text-6xl text-electric-blue glow-text-hard">🚀</span> 
+          </div>
+          <div className="w-full md:w-2/3 text-center md:text-left">
+            <h3 className="text-3xl font-semibold text-subtle-white mb-4">Advanced Typing Techniques</h3>
+            <p className="text-slate-400 mb-6 leading-relaxed">
+              Master complex patterns, improve accuracy under pressure, and learn ergonomic best practices to type faster and more comfortably than ever before. This course is designed for those ready to take their skills to a professional level.
+            </p>
+            <Link 
+              href="/courses/advanced-typing" // Adjust link as needed
+              className="inline-block text-lg font-semibold px-8 py-3 rounded-lg bg-electric-blue text-white shadow-md hover:bg-opacity-80 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-opacity-50 transition-all duration-300 ease-in-out"
+            >
+              Learn More
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Leaderboard Teaser Section */}
+      <section className="relative z-10 mt-24 w-full max-w-4xl mx-auto py-16 text-center">
+        <h2 className="text-4xl font-bold text-subtle-white mb-12">
+          Climb the <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-violet">Ranks!</span>
+        </h2>
+        <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
+          See how you stack up against the best! Our global leaderboard tracks top performers. Practice, improve, and earn your spot among the elite.
+        </p>
+        <div className="glass-panel p-8 mb-8">
+          <h3 className="text-2xl font-semibold text-subtle-white mb-6">Top Typer Spotlight</h3>
+          {/* Placeholder for dynamic leaderboard data */}
+          <div className="space-y-3 text-slate-300">
+            <p>1. SpeedyKeys - 150 WPM</p>
+            <p>2. TypeMasterFlex - 145 WPM</p>
+            <p>3. QuickFingers - 142 WPM</p>
+          </div>
+          <p className="text-xs text-slate-500 mt-4">Leaderboard data is illustrative.</p>
+        </div>
+        <Link 
+          href="/leaderboard" // Adjust link as needed
+          className="inline-block text-lg font-semibold px-10 py-4 rounded-lg bg-gradient-to-r from-electric-blue to-violet text-white shadow-lg hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-opacity-50 transition-all duration-300 ease-in-out"
+        >
+          View Full Leaderboard
+        </Link>
+      </section>
 
       {/* Testimonials Section */}
       <section className="relative z-10 mt-24 w-full max-w-5xl mx-auto py-16">
@@ -175,6 +257,30 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* FAQ Section Placeholder */}
+      <section className="relative z-10 mt-24 w-full max-w-3xl mx-auto py-16">
+        <h2 className="text-4xl font-bold text-center text-subtle-white mb-16">
+          Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-violet">Questions</span>
+        </h2>
+        <div className="space-y-6">
+          {/* Placeholder for FAQ items - consider an accordion component */}
+          <div className="glass-panel p-6">
+            <h3 className="text-xl font-semibold text-subtle-white mb-2">What is TypingSpeedAcademy?</h3>
+            <p className="text-slate-400">[Answer will go here]</p>
+          </div>
+          <div className="glass-panel p-6">
+            <h3 className="text-xl font-semibold text-subtle-white mb-2">How do I improve my typing speed?</h3>
+            <p className="text-slate-400">[Answer will go here]</p>
+          </div>
+          <div className="glass-panel p-6">
+            <h3 className="text-xl font-semibold text-subtle-white mb-2">Are there any free courses?</h3>
+            <p className="text-slate-400">[Answer will go here]</p>
+          </div>
+        </div>
+        <p className="text-center text-slate-500 mt-8 text-sm">More questions? <Link href="/contact" className="text-electric-blue hover:underline">Contact us</Link>.</p>
+      </section>
+
+      {/* Closing Call to Action */}
       <div className="relative z-10 mt-16 text-center py-10">
         <p className="text-slate-400 italic">
           Ready to elevate your typing skills? Your journey starts now.
