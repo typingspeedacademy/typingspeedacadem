@@ -69,7 +69,7 @@ const LoginPage = () => {
     } catch (err: any) {
       console.error('Login submission error:', err);
       setError('An unexpected error occurred during login. Please try again.');
-    }\ finally {
+    } finally {
       setLoading(false);
     }
   };
