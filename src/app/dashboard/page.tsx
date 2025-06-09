@@ -52,6 +52,9 @@ const mockLeaderboard = [
 ];
 
 import FuturisticLineChart from '@/components/FuturisticLineChart';
+import RechartsLineChart from '@/components/RechartsLineChart'; // Added new chart
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface ProgressDataPoint {
   date: string; // This will be the formatted date string for the chart labels
@@ -401,14 +404,15 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="h-80 sm:h-96">
-              <FuturisticLineChart data={progressData} />
+              {/* <FuturisticLineChart data={progressData} /> */}
+              <RechartsLineChart data={progressData} />
             </div>
           )}
         </div>
 
         {/* Side Panel: Achievements & Leaderboard */}
         <div className="lg:col-span-1 space-y-6">
-          {/* Achievements Card */}
+          {/* Achievements Card - remains unchanged */}
           <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
             <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center">
               <TrophyIcon className="h-6 w-6 mr-2 text-amber-500 dark:text-amber-400" /> Achievements
@@ -429,36 +433,53 @@ export default function DashboardPage() {
             </ul>
           </div>
 
-          {/* Leaderboard Card */}
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
-            <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center">
-              <UserGroupIcon className="h-6 w-6 mr-2 text-green-500 dark:text-green-400" /> Leaderboard
-            </h2>
-            <ul className="space-y-2">
-              {mockLeaderboard.slice(0, 5).map((entry) => (
-                <li 
-                  key={entry.rank} 
-                  className={`flex items-center justify-between p-3 rounded-lg transition-colors 
-                    ${entry.isCurrentUser 
-                      ? 'bg-sky-100 dark:bg-sky-700/50 border-l-4 border-sky-500 dark:border-sky-400'
-                      : 'bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
-                >
-                  <div className="flex items-center">
-                    <span className={`font-semibold text-sm w-6 text-center mr-2 ${entry.isCurrentUser ? 'text-sky-600 dark:text-sky-300' : 'text-slate-500 dark:text-slate-400'}`}>{entry.rank}</span>
-                    <UserCircleIcon className={`h-7 w-7 mr-2 ${entry.isCurrentUser ? 'text-sky-500 dark:text-sky-400' : 'text-slate-400 dark:text-slate-500'}`} />
-                    <span className={`text-sm font-medium ${entry.isCurrentUser ? 'text-sky-700 dark:text-sky-200' : 'text-slate-700 dark:text-slate-200'}`}>{entry.name}</span>
-                  </div>
-                  <div className="text-right">
-                    <p className={`text-sm font-semibold ${entry.isCurrentUser ? 'text-sky-600 dark:text-sky-300' : 'text-slate-700 dark:text-slate-200'}`}>{entry.wpm} WPM</p>
-                    <p className={`text-xs ${entry.isCurrentUser ? 'text-sky-500 dark:text-sky-400' : 'text-slate-500 dark:text-slate-400'}`}>{entry.accuracy}% Acc</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <Link href="/leaderboard" className="mt-4 inline-flex items-center text-sm font-medium text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 transition-colors group">
-              View Full Leaderboard
-              <ArrowRightIcon className="ml-1.5 h-4 w-4 transform group-hover:translate-x-1 transition-transform"/>
-            </Link>
+          {/* Leaderboard Card - MODIFIED */}
+          <div className="relative bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
+            <div className="blur-sm">
+              <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center">
+                <UserGroupIcon className="h-6 w-6 mr-2 text-green-500 dark:text-green-400" /> Leaderboard
+              </h2>
+              <ul className="space-y-2">
+                {mockLeaderboard.slice(0, 3).map((entry) => ( // Show fewer entries due to blur
+                  <li 
+                    key={entry.rank} 
+                    className={`flex items-center justify-between p-3 rounded-lg transition-colors 
+                      ${entry.isCurrentUser 
+                        ? 'bg-sky-100 dark:bg-sky-700/50 border-l-4 border-sky-500 dark:border-sky-400'
+                        : 'bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
+                  >
+                    <div className="flex items-center">
+                      <span className={`font-semibold text-sm w-6 text-center mr-2 ${entry.isCurrentUser ? 'text-sky-600 dark:text-sky-300' : 'text-slate-500 dark:text-slate-400'}`}>{entry.rank}</span>
+                      <UserCircleIcon className={`h-7 w-7 mr-2 ${entry.isCurrentUser ? 'text-sky-500 dark:text-sky-400' : 'text-slate-400 dark:text-slate-500'}`} />
+                      <span className={`text-sm font-medium ${entry.isCurrentUser ? 'text-sky-700 dark:text-sky-200' : 'text-slate-700 dark:text-slate-200'}`}>{entry.name}</span>
+                    </div>
+                    <div className="text-right">
+                      <p className={`text-sm font-semibold ${entry.isCurrentUser ? 'text-sky-600 dark:text-sky-300' : 'text-slate-700 dark:text-slate-200'}`}>{entry.wpm} WPM</p>
+                      <p className={`text-xs ${entry.isCurrentUser ? 'text-sky-500 dark:text-sky-400' : 'text-slate-500 dark:text-slate-400'}`}>{entry.accuracy}% Acc</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-4 text-sm font-medium text-sky-600 dark:text-sky-400">
+                View Full Leaderboard (Coming Soon)
+              </div>
+            </div>
+            {/* Overlay for "Coming Soon" message */}
+            <div className="absolute inset-0 bg-slate-800/70 dark:bg-slate-900/80 flex flex-col items-center justify-center p-6 rounded-xl text-center">
+              <FireIcon className="h-12 w-12 text-amber-400 mb-3" />
+              <h3 className="text-2xl font-bold text-white mb-2">Paid Challenges Coming Soon!</h3>
+              <p className="text-slate-200 dark:text-slate-300 mb-1">Compete for prizes up to</p>
+              <p className="text-3xl font-extrabold text-amber-400 mb-4">$100,000!</p>
+              <p className="text-slate-300 dark:text-slate-400 mb-6 text-sm">
+                Sharpen your skills with our courses to get ready.
+              </p>
+              <Button asChild className="bg-sky-500 hover:bg-sky-600 text-white font-semibold">
+                <Link href="/paid-courses">
+                  Explore Paid Courses
+                  <ArrowRightIcon className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
