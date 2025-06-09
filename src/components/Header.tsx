@@ -40,7 +40,7 @@ const Header = () => {
   };
 
   return (
-    <header className="py-4 sticky top-0 z-50 px-4 md:px-8 bg-gradient-to-br from-slate-50 to-sky-100">
+    <header className="py-4 sticky top-0 z-50 px-4 md:px-8">
       <nav 
         className="container mx-auto flex justify-between items-center bg-white/70 backdrop-blur-lg text-slate-700 shadow-lg rounded-xl p-3 md:p-4"
       > 
