@@ -17,8 +17,9 @@ import {
   ArrowRightIcon, 
   MinusSmallIcon, 
   LockClosedIcon,
-  FireIcon // Added FireIcon import
-} from '@heroicons/react/24/outline'; 
+  FireIcon, // Added FireIcon import
+  ArchiveBoxXMarkIcon, // Added ArchiveBoxXMarkIcon import
+} from '@heroicons/react/24/outline';
 import { createClient } from '@/utils/supabase/client';
 import type { User } from '@supabase/supabase-js';
 
@@ -394,20 +395,13 @@ export default function DashboardPage() {
             </div>
           </div>
           {hasNoData ? (
-            <div className="flex flex-col items-center justify-center h-64 text-center text-slate-500 dark:text-slate-400">
-              <PlayCircleIcon className="h-16 w-16 mb-4 text-sky-400 dark:text-sky-500" />
-              <h3 className="text-lg font-semibold mb-1">No Typing Data Yet!</h3>
-              <p className="text-sm mb-4">Complete a typing exercise to see your progress.</p>
-              <Link href="/typing-test" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors">
-                <PlayCircleIcon className="-ml-1 mr-2 h-5 w-5" />
-                Start Exercise
-              </Link>
+            <div className="flex flex-col items-center justify-center h-64 bg-slate-100 dark:bg-slate-800 rounded-lg shadow">
+              <ArchiveBoxXMarkIcon className="w-16 h-16 text-slate-400 dark:text-slate-500 mb-4" />
+              <p className="text-slate-600 dark:text-slate-400 text-lg">No progress data available for this period.</p>
+              <p className="text-slate-500 dark:text-slate-500 text-sm">Try selecting a different time frame or complete some lessons.</p>
             </div>
           ) : (
-            <div className="h-80 sm:h-96">
-              {/* <FuturisticLineChart data={progressData} /> */}
-              <RechartsLineChart data={progressData} />
-            </div>
+            <RechartsLineChart data={progressData} className="h-[350px] sm:h-[400px] lg:h-[450px]" timeFrame={timeFrame} />
           )}
         </div>
 
