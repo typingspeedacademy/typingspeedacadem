@@ -53,8 +53,86 @@ const PoliciesPage = () => {
         </section>
 
         <section>
-          <h2 className="header-sub mb-3">Contact Us</h2>
-          <p className="text-lg text-gray-700 leading-relaxed">
+          <h2 className="header-sub mb-3">Cookie Policy</h2>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            Effective Date: [Insert Date]
+          </p>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            TypingSpeedAcademy ("us", "we", or "our") uses cookies on the typingspeed.academy website (the "Service"). By using the Service, you consent to the use of cookies.
+          </p>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            Our Cookies Policy explains what cookies are, how we use cookies, how third-parties we may partner with may use cookies on the Service, your choices regarding cookies and further information about cookies.
+          </p>
+          <h3 className="text-xl font-semibold text-primary-blue mb-2">What Are Cookies</h3>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            Cookies are small pieces of text sent by your web browser by a website you visit. A cookie file is stored in your web browser and allows the Service or a third-party to recognize you and make your next visit easier and the Service more useful to you.
+          </p>
+          <h3 className="text-xl font-semibold text-primary-blue mb-2">How TypingSpeedAcademy Uses Cookies</h3>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            When you use and access the Service, we may place a number of cookies files in your web browser. We use cookies for the following purposes:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-lg text-gray-700 leading-relaxed mb-4">
+            <li>To enable certain functions of the Service</li>
+            <li>To provide analytics</li>
+            <li>To store your preferences</li>
+            {/* <li>To enable advertisements delivery, including behavioral advertising.</li> */}
+          </ul>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            We use both session and persistent cookies on the Service and we use different types of cookies to run the Service:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-lg text-gray-700 leading-relaxed mb-4">
+            <li><strong>Essential cookies.</strong> We may use essential cookies to authenticate users and prevent fraudulent use of user accounts.</li>
+            <li><strong>Preferences cookies.</strong> We may use preferences cookies to remember information that changes the way the Service behaves or looks, such as the "remember me" functionality of a registered user or a user's language preference.</li>
+            <li><strong>Analytics cookies.</strong> We may use analytics cookies to track information how the Service is used so that we can make improvements. We may also use analytics cookies to test new advertisements, pages, features or new functionality of the Service to see how our users react to them.</li>
+          </ul>
+          <h3 className="text-xl font-semibold text-primary-blue mb-2">Third-Party Cookies</h3>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            In addition to our own cookies, we may also use various third-parties cookies to report usage statistics of the Service, deliver advertisements on and through the Service, and so on.
+          </p>
+          <h3 className="text-xl font-semibold text-primary-blue mb-2">What Are Your Choices Regarding Cookies</h3>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            If you'd like to delete cookies or instruct your web browser to delete or refuse cookies, please visit the help pages of your web browser. Please note, however, that if you delete cookies or refuse to accept them, you might not be able to use all of the features we offer, you may not be able to store your preferences, and some of our pages might not display properly.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="header-sub mb-3">Refund Policy</h2>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            Effective Date: [Insert Date]
+          </p>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            Thank you for choosing TypingSpeedAcademy for your typing skill development. We strive to provide the best learning experience possible. Please read our refund policy carefully.
+          </p>
+          <h3 className="text-xl font-semibold text-primary-blue mb-2">Paid Courses and Subscriptions</h3>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            For our paid courses and subscription services, refunds may be considered under the following conditions:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-lg text-gray-700 leading-relaxed mb-4">
+            <li><strong>Technical Issues:</strong> If you experience persistent technical issues that prevent you from accessing or using the course content, and we are unable to resolve the issue within a reasonable timeframe (e.g., 7 business days), you may be eligible for a full or partial refund.</li>
+            <li><strong>Course Not as Described:</strong> If the course content significantly differs from its description on our website, you may request a refund within [e.g., 7 days] of purchase.</li>
+            <li><strong>Duplicate Purchase:</strong> If you accidentally purchased the same course or subscription multiple times, please contact us immediately for a refund of the duplicate transaction(s).</li>
+          </ul>
+          <h3 className="text-xl font-semibold text-primary-blue mb-2">Non-Refundable Circumstances</h3>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            Refunds will generally not be provided in the following circumstances:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-lg text-gray-700 leading-relaxed mb-4">
+            <li>Change of mind after purchase.</li>
+            <li>Failure to use the course or service after purchase.</li>
+            <li>Partial completion of a course (unless due to unresolved technical issues from our side).</li>
+            <li>Promotional or discounted purchases, unless explicitly stated otherwise in the promotion terms.</li>
+          </ul>
+          <h3 className="text-xl font-semibold text-primary-blue mb-2">How to Request a Refund</h3>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            To request a refund, please contact our support team at <a href="mailto:support@typingspeed.academy" className="text-accent-blue hover:underline">support@typingspeed.academy</a> with your purchase details and a clear explanation of your reason for the request. We aim to process refund requests within [e.g., 5-7 business days].
+          </p>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
+            TypingSpeedAcademy reserves the right to modify this refund policy at any time. Any changes will be effective immediately upon posting the updated policy on our website.
+          </p>
+        </section>
+
+        <section>
+          <p className="text-lg text-gray-700 leading-relaxed mb-4">
             If you have any questions about these Policies, please contact us at <a href="mailto:support@typingspeed.academy" className="text-accent-blue hover:underline">support@typingspeed.academy</a>.
           </p>
         </section>
