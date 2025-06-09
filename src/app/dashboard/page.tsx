@@ -400,7 +400,7 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="h-80 sm:h-96">
-              <FuturisticLineChart data={progressData} timeFrame={timeFrame} />
+              <FuturisticLineChart data={progressData} />
             </div>
           )}
         </div>
