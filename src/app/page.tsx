@@ -163,16 +163,17 @@ export default function HomePage() {
 
       {/* Testimonials Section */}
       <section className="relative z-10 mt-24 w-full max-w-5xl mx-auto py-16">
-        <h2 className="text-4xl font-bold text-center text-subtle-white mb-16 overflow-hidden whitespace-nowrap">
-          Loved by <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-violet">Typists Worldwide</span> & Many More!
+        {/* Updated heading style for better theme consistency */}
+        <h2 className="text-4xl sm:text-5xl font-semibold text-center text-slate-800 mb-20">
+          Loved by <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Typists Worldwide</span> & Many More!
         </h2>
         <div className="testimonial-outer-container overflow-x-hidden">
           <div className="testimonial-inner-container flex py-4 space-x-8">
-            {[ // Sample testimonials, ideally fetch these or pass as props
+            {[ // Array of testimonial objects. Each object represents a single testimonial.
             {
               quote: "My WPM skyrocketed! The interface is sleek and motivating.",
               name: "Alex R.",
-              avatarSeed: "AlexR", // For UI Avatars
+              avatarSeed: "AlexR", // Used for generating a unique avatar from ui-avatars.com
               role: "Student"
             },
             {
@@ -205,56 +206,64 @@ export default function HomePage() {
               avatarSeed: "LauraV",
               role: "Transcriptionist"
             },
-            // Duplicate for infinite scroll effect
+            // Duplicate set of testimonials for a smoother infinite scroll visual effect.
+            // Ensure unique keys for React if these are directly rendered without further processing.
             {
               quote: "My WPM skyrocketed! The interface is sleek and motivating.",
-              name: "Alex R. 2", // Unique key for React
+              name: "Alex R. 2", 
               avatarSeed: "AlexR",
               role: "Student"
             },
             {
               quote: "Finally, a typing app that doesn't look like it's from the 90s. Love the design!",
-              name: "Mia K. 2", // Unique key for React
+              name: "Mia K. 2", 
               avatarSeed: "MiaK",
               role: "Developer"
             },
             {
               quote: "The progressive difficulty helped me break my plateau. Highly recommend!",
-              name: "Jordan P. 2", // Unique key for React
+              name: "Jordan P. 2", 
               avatarSeed: "JordanP",
               role: "Writer"
             },
             {
               quote: "The analytics are incredibly detailed. It's helped me pinpoint exactly where I need to improve.",
-              name: "Samira B. 2", // Unique key for React
+              name: "Samira B. 2", 
               avatarSeed: "SamiraB",
               role: "Data Analyst"
             },
             {
               quote: "I use this to warm up before coding sessions. It's fun and effective.",
-              name: "Kenji T. 2", // Unique key for React
+              name: "Kenji T. 2", 
               avatarSeed: "KenjiT",
               role: "Software Engineer"
             },
             {
               quote: "As a professional transcriber, speed and accuracy are key. This platform delivers on both.",
-              name: "Laura V. 2", // Unique key for React
+              name: "Laura V. 2", 
               avatarSeed: "LauraV",
               role: "Transcriptionist"
             }
+            // Mapping over the testimonials array to render each card.
           ].map((testimonial, index) => (
             <div 
               key={`${testimonial.name}-${index}`} 
-              className="glass-panel p-8 flex flex-col items-center text-center border border-violet/30 hover:border-electric-blue/70 transition-all duration-300 transform hover:-translate-y-1 flex-shrink-0 w-80 md:w-96"
+              // Updated card styling for better theme consistency and modern look
+              className="bg-white/80 backdrop-blur-lg p-8 flex flex-col items-center text-center rounded-2xl shadow-xl hover:shadow-sky-500/30 border border-slate-200 hover:border-sky-400 transition-all duration-300 transform hover:-translate-y-1.5 flex-shrink-0 w-80 md:w-96"
             >
               <img 
-                src={`https://ui-avatars.com/api/?name=${testimonial.avatarSeed}&background=1A202C&color=7DF9FF&bold=true&size=96&rounded=true`}
-                alt={testimonial.name}
-                className="w-24 h-24 rounded-full mb-6 border-2 border-electric-blue/50"
+                // Using ui-avatars.com for dynamic, consistent avatar generation.
+                // Colors are chosen to fit the website's theme.
+                src={`https://ui-avatars.com/api/?name=${testimonial.avatarSeed}&background=E0F2FE&color=0284C7&bold=true&size=96&rounded=true`}
+                alt={`${testimonial.name}'s testimonial avatar`}
+                className="w-24 h-24 rounded-full mb-6 border-2 border-sky-300 shadow-md"
               />
-              <p className="text-slate-300 italic text-md mb-4 flex-grow">"{testimonial.quote}"</p>
-              <h4 className="text-xl font-semibold text-subtle-white">{testimonial.name}</h4>
-              <p className="text-electric-blue text-sm">{testimonial.role}</p>
+              {/* Testimonial quote with appropriate styling */}
+              <p className="text-slate-600 italic text-md mb-4 flex-grow">"{testimonial.quote}"</p>
+              {/* Testimonial author's name */}
+              <h4 className="text-xl font-semibold text-slate-700">{testimonial.name}</h4>
+              {/* Testimonial author's role, styled to fit the theme */}
+              <p className="text-sky-600 text-sm">{testimonial.role}</p>
             </div>
           ))}
           </div>
