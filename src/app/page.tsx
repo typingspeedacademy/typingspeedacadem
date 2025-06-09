@@ -263,18 +263,25 @@ export default function HomePage() {
           Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-violet">Questions</span>
         </h2>
         <div className="space-y-6">
-          {/* Placeholder for FAQ items - consider an accordion component */}
           <div className="glass-panel p-6">
             <h3 className="text-xl font-semibold text-subtle-white mb-2">What is TypingSpeedAcademy?</h3>
-            <p className="text-slate-400">[Answer will go here]</p>
+            <p className="text-slate-400">TypingSpeedAcademy is an online platform dedicated to helping users improve their typing speed and accuracy through a variety of exercises, courses, and challenges.</p>
           </div>
           <div className="glass-panel p-6">
             <h3 className="text-xl font-semibold text-subtle-white mb-2">How do I improve my typing speed?</h3>
-            <p className="text-slate-400">[Answer will go here]</p>
+            <p className="text-slate-400">Consistent practice is key! Utilize our targeted exercises, focus on accuracy first, then speed. Our platform provides detailed feedback to help you identify areas for improvement.</p>
           </div>
           <div className="glass-panel p-6">
-            <h3 className="text-xl font-semibold text-subtle-white mb-2">Are there any free courses?</h3>
-            <p className="text-slate-400">[Answer will go here]</p>
+            <h3 className="text-xl font-semibold text-subtle-white mb-2">Are there any free courses or trials?</h3>
+            <p className="text-slate-400">Yes! We offer a range of free exercises and a basic trial to get you started. Premium features and advanced courses are available with a subscription.</p>
+          </div>
+          <div className="glass-panel p-6">
+            <h3 className="text-xl font-semibold text-subtle-white mb-2">Can I track my progress?</h3>
+            <p className="text-slate-400">Absolutely! TypingSpeedAcademy provides detailed analytics, including WPM (Words Per Minute), accuracy charts, and progress over time, so you can see how you're improving.</p>
+          </div>
+          <div className="glass-panel p-6">
+            <h3 className="text-xl font-semibold text-subtle-white mb-2">Is there a competitive aspect?</h3>
+            <p className="text-slate-400">Yes, you can compete with other users on our global leaderboards. Challenge yourself and see how you rank against typists from around the world!</p>
           </div>
         </div>
         <p className="text-center text-slate-500 mt-8 text-sm">More questions? <Link href="/contact" className="text-electric-blue hover:underline">Contact us</Link>.</p>
