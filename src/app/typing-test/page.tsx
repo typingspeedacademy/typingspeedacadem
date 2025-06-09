@@ -27,62 +27,135 @@ const freeTierFeatures = [
   },
 ];
 
-export default function TypingTestPage() {
+import TypingArea from '@/components/TypingArea';
+import StatsDisplay from '@/components/StatsDisplay';
+import SettingsPanel from '@/components/SettingsPanel';
+import { sampleTexts } from '@/data/sampleTexts';
+
+const TypingTestPage = () => {
+  const [text, setText] = useState(sampleTexts[0].text);
+  const [userInput, setUserInput] = useState('');
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [endTime, setEndTime] = useState<number | null>(null);
+  const [errors, setErrors] = useState(0);
+  const [testActive, setTestActive] = useState(false);
+  const [testCompleted, setTestCompleted] = useState(false);
+
+  const [duration, setDuration] = useState(60); // seconds
+  const [difficulty, setDifficulty] = useState('medium');
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (!testActive && !testCompleted) {
+      startTest();
+    }
+    if (testActive && !testCompleted) {
+      setUserInput(e.target.value);
+      // Basic error checking (can be more sophisticated)
+      let currentErrors = 0;
+      for (let i = 0; i < e.target.value.length; i++) {
+        if (e.target.value[i] !== text[i]) {
+          currentErrors++;
+        }
+      }
+      setErrors(currentErrors);
+
+      if (e.target.value.length === text.length) {
+        endTest();
+      }
+    }
+  };
+
+  const startTest = () => {
+    setUserInput('');
+    setErrors(0);
+    setStartTime(Date.now());
+    setEndTime(null);
+    setTestActive(true);
+    setTestCompleted(false);
+  };
+
+  const endTest = () => {
+    setEndTime(Date.now());
+    setTestActive(false);
+    setTestCompleted(true);
+  };
+
+  const calculateWPM = () => {
+    if (!startTime || !endTime || text.length === 0) return 0;
+    const timeTakenMinutes = (endTime - startTime) / 60000;
+    const wordsTyped = text.split(' ').length;
+    // Prevent division by zero if timeTakenMinutes is very small or zero
+    if (timeTakenMinutes <= 0) return 0; 
+    return Math.round(wordsTyped / timeTakenMinutes);
+  };
+
+  const calculateAccuracy = () => {
+    if (text.length === 0) return 100;
+    const correctChars = text.length - errors;
+    return Math.round((correctChars / text.length) * 100);
+  };
+
+  const resetTest = () => {
+    // Select a new random text or based on difficulty
+    const newText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)].text;
+    setText(newText);
+    setUserInput('');
+    setStartTime(null);
+    setEndTime(null);
+    setErrors(0);
+    setTestActive(false);
+    setTestCompleted(false);
+  };
+
+  const handleSettingsChange = (newDuration: number, newDifficulty: string) => {
+    setDuration(newDuration);
+    setDifficulty(newDifficulty);
+    // Potentially fetch new text based on difficulty
+    resetTest(); // Reset test with new settings
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-navy via-black to-violet text-subtle-white flex flex-col items-center justify-center p-4 sm:p-8">
-      <main className="relative z-10 container mx-auto max-w-3xl w-full glass-panel p-6 sm:p-10 border border-violet/50 shadow-xl shadow-violet/20 rounded-lg">
+    <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 min-h-screen flex flex-col items-center">
+      <h1 className="text-4xl sm:text-5xl font-semibold text-center text-slate-800 mb-8 sm:mb-12">
+        Typing <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Challenge</span>
+      </h1>
 
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold text-electric-blue animate-pulse mb-2">
-            Start Your Typing Journey!
-          </h2>
-          <p className="text-slate-300 mb-6">
-            Test your speed, accuracy, and improve your skills. Here's what you can do:
-          </p>
+      <div className="w-full max-w-3xl bg-white/70 backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-xl border border-sky-200 mb-8">
+        <SettingsPanel 
+          onSettingsChange={handleSettingsChange} 
+          currentDuration={duration} 
+          currentDifficulty={difficulty} 
+        />
+      </div>
+
+      <div className="w-full max-w-3xl bg-white/70 backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-xl border border-sky-200 mb-8">
+        <TypingArea
+          textToType={text}
+          userInput={userInput}
+          onInputChange={handleInputChange}
+          disabled={testCompleted || !testActive && userInput.length > 0} // Disable if completed or if started but not active (e.g. after reset)
+        />
+      </div>
+
+      {(testActive || testCompleted) && (
+        <div className="w-full max-w-3xl bg-white/70 backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-xl border border-sky-200 mb-8">
+          <StatsDisplay
+            wpm={calculateWPM()}
+            accuracy={calculateAccuracy()}
+            errors={errors}
+            timeElapsed={startTime && endTime ? ((endTime - startTime) / 1000) : (startTime ? (Date.now() - startTime) / 1000 : 0)}
+          />
         </div>
+      )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          {freeTierFeatures.map((feature) => (
-            <div
-              key={feature.name}
-              className="glass-panel p-6 flex flex-col items-start border border-electric-blue/30 hover:border-electric-blue/70 transition-all duration-300 ease-in-out transform hover:scale-105"
-            >
-              <feature.icon className="h-10 w-10 text-electric-blue mb-4" aria-hidden="true" />
-              <h3 className="text-xl font-semibold text-subtle-white mb-2">{feature.name}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{feature.description}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="text-center mb-12">
-          <h1 className="header-main text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-electric-blue to-violet">
-            Ready to Test Your Skills?
-          </h1>
-          <p className="text-slate-300 mb-6 text-lg">
-            Click the button below to start the typing exercise.
-          </p>
-          <Link href="/typing-test/typing-exercise" legacyBehavior>
-            <a className="inline-flex items-center justify-center px-8 py-4 text-xl font-semibold text-white bg-gradient-to-r from-electric-blue to-violet rounded-lg shadow-lg hover:from-electric-blue/90 hover:to-violet/90 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50 group">
-              Start Typing Exercise
-              <ChevronRightIcon className="ml-2 h-6 w-6 transition-transform duration-300 group-hover:translate-x-1" />
-            </a>
-          </Link>
-        </div>
-
-        <div className="mt-12 text-center border-t border-violet/30 pt-8">
-          <p className="text-slate-300 mb-6 text-lg">
-            Ready to unlock your full potential? Our Premium plan offers advanced features, personalized training, and an ad-free experience.
-          </p>
-          <Link href="/paid-courses" legacyBehavior>
-            <a className="inline-flex items-center justify-center px-6 py-3 text-lg font-medium text-white bg-gradient-to-r from-green-400 to-cyan-500 rounded-lg shadow-md hover:from-green-500 hover:to-cyan-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 group">
-              Explore Premium Courses
-              <ChevronRightIcon className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-            </a>
-          </Link>
-        </div>
-
-      </main>
+      <button
+        onClick={resetTest}
+        className="px-8 py-3 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-150 ease-in-out text-lg"
+      >
+        {testCompleted ? 'Try Another Text' : (testActive || userInput.length > 0 ? 'Reset Test' : 'Start Test')}
+      </button>
     </div>
   );
-}
+};
+
+export default TypingTestPage;

@@ -19,9 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className={`${inter.className} bg-gradient-to-br from-slate-50 to-sky-100 text-gray-700 min-h-screen flex flex-col`}>
         <Header />
-        <main>{children}</main>
+        <main className="flex-grow container mx-auto px-4 py-8">{children}</main>
         <Footer /> {/* Add the Footer component here */} 
       </body>
     </html>
