@@ -82,24 +82,20 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   icon: Icon, 
   trend,
   trendText,
-  bgColor = 'bg-slate-800/60', // Slightly more transparent default
-  textColor = 'text-slate-100' // Brighter default text
+  bgColor = 'bg-white dark:bg-slate-800', // Light theme default, dark mode variant
+  textColor = 'text-slate-700 dark:text-slate-200' // Text for light theme, dark mode variant
 }) => {
-  const trendColor = trend === 'up' ? 'text-emerald-400' : trend === 'down' ? 'text-red-400' : 'text-slate-400';
+  const trendColor = trend === 'up' ? 'text-emerald-500 dark:text-emerald-400' : trend === 'down' ? 'text-red-500 dark:text-red-400' : 'text-slate-500 dark:text-slate-400';
   const displayValue = value !== null && value !== undefined ? value.toString() : (title.toLowerCase().includes('accuracy') ? '0%' : '0');
 
   return (
-    <div className={`relative overflow-hidden group p-5 rounded-xl shadow-xl flex flex-col justify-between h-full ${bgColor} ${textColor} border border-slate-700/50 hover:border-electric-blue/70 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-electric-blue/20`}>
-      {/* Subtle background pattern or glow effect */}
-      <div className="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-300">
-        {/* Example: Diagonal lines pattern */}
-        {/* <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="p" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M0 30L30 0ZM-5 5L5 -5ZM25 35L35 25" stroke="currentColor" strokeWidth="1"/></pattern></defs><rect width="100%" height="100%" fill="url(#p)"/></svg> */}
-      </div>
+    <div className={`relative overflow-hidden group p-5 rounded-xl shadow-lg flex flex-col justify-between h-full ${bgColor} ${textColor} border border-slate-200 dark:border-slate-700 hover:border-sky-400 dark:hover:border-sky-500 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-sky-500/20 dark:hover:shadow-sky-400/20`}>
+      {/* Subtle background pattern or glow effect removed for cleaner light theme */}
       <div className="relative z-10 flex justify-between items-start mb-3">
-        <h3 className="text-xs sm:text-sm font-semibold text-slate-300 uppercase tracking-wider">{title}</h3>
-        <Icon className="h-6 w-6 sm:h-7 sm:w-7 text-electric-blue opacity-90 group-hover:opacity-100 transition-opacity" />
+        <h3 className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{title}</h3>
+        <Icon className="h-6 w-6 sm:h-7 sm:w-7 text-sky-500 dark:text-sky-400 opacity-90 group-hover:opacity-100 transition-opacity" />
       </div>
-      <p className="text-3xl sm:text-4xl font-bold text-light-gradient mb-1 group-hover:text-white transition-colors">{displayValue}</p>
+      <p className="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-slate-100 mb-1 group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors">{displayValue}</p>
       {trend && (
         <div className={`flex items-center text-xs ${trendColor} mt-auto`}>
           {trend === 'up' && <ArrowTrendingUpIcon className="h-4 w-4 mr-1.5" />}
@@ -338,129 +334,133 @@ export default function DashboardPage() {
   // In a real app, fetch user data: useEffect(() => { /* fetch logic */ }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark-navy to-deep-space text-subtle-white p-4 sm:p-6 lg:p-8">
-      <header className="mb-8 sm:mb-10">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-electric-blue tracking-tight">
-          Welcome back, <span className="text-light-gradient">{userData.name}</span>!
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-sky-100 dark:from-slate-900 dark:to-sky-800 p-4 sm:p-6 lg:p-8 text-slate-800 dark:text-slate-200">
+      <header className="mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100">
+          Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-indigo-600 dark:from-sky-400 dark:to-indigo-500">{userData.name || 'User'}!</span>
         </h1>
-        <p className="text-md sm:text-lg text-slate-400 mt-2">Here's your typing performance overview.</p>
+        <p className="text-slate-600 dark:text-slate-400 mt-1 text-sm sm:text-base">Here&apos;s your typing performance overview.</p>
       </header>
 
-      {/* Analytics Cards Section - Enhanced Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-10">
-        <AnalyticsCard title="Words Per Minute" value={userData.wpm} icon={ArrowTrendingUpIcon} trend="up" />
-        <AnalyticsCard title="Accuracy" value={`${userData.accuracy}%`} icon={ShieldCheckIcon} trend="stable" />
-        <AnalyticsCard title="Lessons Completed" value={lessonsCompletedCount} icon={AcademicCapIcon} trend="up" />
+      {/* Analytics Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <AnalyticsCard 
+          title="Words Per Minute"
+          value={userData.wpm}
+          icon={ChartBarIcon} 
+          trend={userData.wpm > 60 ? "up" : userData.wpm > 40 ? "stable" : "down"} // Example trend logic
+          trendText={userData.wpm > 60 ? "Trending Up" : userData.wpm > 40 ? "Stable" : "Needs Improvement"}
+        />
+        <AnalyticsCard 
+          title="Accuracy"
+          value={`${userData.accuracy}%`}
+          icon={ShieldCheckIcon} 
+          trend={userData.accuracy > 90 ? "up" : userData.accuracy > 80 ? "stable" : "down"}
+          trendText={userData.accuracy > 90 ? "Excellent" : userData.accuracy > 80 ? "Good" : "Practice More"}
+        />
+        <AnalyticsCard 
+          title="Lessons Completed"
+          value={lessonsCompletedCount} 
+          icon={AcademicCapIcon} 
+          // trend="up" // Example, could be based on recent activity
+          // trendText="Keep Going!"
+        />
       </div>
 
-      {/* Main Content Area - Chart and Leaderboard */}
+      {/* Main Content Area: Progress Chart and Side Panels */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Progress Chart (Quick Stats removed) */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Progress Chart */}
-          <div className="glass-panel glowing-border-blue p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold flex items-center">
-                <ChartBarIcon className="h-6 w-6 mr-2 text-electric-blue" /> Your Progress Over Time
-              </h2>
-              <div className="flex space-x-1 sm:space-x-2 bg-dark-navy/50 p-1 rounded-md">
-                {(['monthly', 'weekly', 'daily', 'hourly', 'minutely'] as const).map(tf => (
-                  <button
-                    key={tf}
-                    onClick={() => setTimeFrame(tf)}
-                    className={`px-2 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm rounded-md transition-all duration-200 font-medium 
-                               ${timeFrame === tf ? 'bg-electric-blue text-white shadow-md' : 'bg-transparent text-slate-400 hover:bg-slate-700/70 hover:text-slate-200'}`}
-                  >
-                    {tf.charAt(0).toUpperCase() + tf.slice(1)}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="relative">
-              <div className={hasNoData ? 'filter blur-sm pointer-events-none' : ''}>
-                {/* Pass mockUserData.progressData if hasNoData is true and chart needs a specific structure, otherwise pass actual progressData or an empty array */}
-                <FuturisticLineChart data={hasNoData ? mockUserData.progressData : progressData} className="mt-4" />
-              </div>
-              {hasNoData && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-dark-navy/70 rounded-lg p-4 text-center">
-                  <PlayCircleIcon className="h-16 w-16 text-electric-blue mb-4" />
-                  <p className="text-xl font-semibold text-subtle-white mb-2">No Typing Data Yet!</p>
-                  <p className="text-sm text-slate-300 mb-6">Complete a typing exercise to see your progress.</p>
-                  <Link href="/typing-test/typing-exercise" legacyBehavior>
-                    <a className="btn-secondary group inline-flex items-center">
-                      <PlayCircleIcon className="h-5 w-5 mr-2 transition-transform duration-300 ease-in-out group-hover:scale-110" />
-                      Start Exercise
-                    </a>
-                  </Link>
-                </div>
-              )}
+        {/* Progress Over Time Chart - Spans 2 columns on large screens */}
+        <div className="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">Your Progress Over Time</h2>
+            <div className="flex space-x-1 bg-slate-100 dark:bg-slate-700 p-1 rounded-lg">
+              {['monthly', 'weekly', 'daily', 'hourly', 'minutely'].map((tf) => (
+                <button
+                  key={tf}
+                  onClick={() => setTimeFrame(tf as typeof timeFrame)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors
+                    ${timeFrame === tf 
+                      ? 'bg-sky-500 text-white dark:bg-sky-600'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}`}
+                >
+                  {tf.charAt(0).toUpperCase() + tf.slice(1)}
+                </button>
+              ))}
             </div>
           </div>
+          {hasNoData ? (
+            <div className="flex flex-col items-center justify-center h-64 text-center text-slate-500 dark:text-slate-400">
+              <PlayCircleIcon className="h-16 w-16 mb-4 text-sky-400 dark:text-sky-500" />
+              <h3 className="text-lg font-semibold mb-1">No Typing Data Yet!</h3>
+              <p className="text-sm mb-4">Complete a typing exercise to see your progress.</p>
+              <Link href="/typing-test" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors">
+                <PlayCircleIcon className="-ml-1 mr-2 h-5 w-5" />
+                Start Exercise
+              </Link>
+            </div>
+          ) : (
+            <div className="h-80 sm:h-96">
+              <FuturisticLineChart data={progressData} timeFrame={timeFrame} />
+            </div>
+          )}
         </div>
 
-        {/* Right Column: Achievements & Leaderboard */}
-        <div className="space-y-6">
-          {/* Achievements */}
-          <div className="glass-panel glowing-border-gold p-6">
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <TrophyIcon className="h-6 w-6 mr-2 text-yellow-400" /> Achievements
+        {/* Side Panel: Achievements & Leaderboard */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Achievements Card */}
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
+            <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center">
+              <TrophyIcon className="h-6 w-6 mr-2 text-amber-500 dark:text-amber-400" /> Achievements
             </h2>
             <ul className="space-y-3">
-              {userData.achievements.map(ach => (
-                <li key={ach.id} className="flex items-center p-2 rounded-md hover:bg-slate-700/50 transition-colors">
-                  <ach.icon className="h-7 w-7 text-yellow-500 mr-3 flex-shrink-0" />
+              {userData.achievements.map((ach) => (
+                <li key={ach.id} className="flex items-center p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                  <ach.icon className="h-7 w-7 text-sky-500 dark:text-sky-400 mr-3 flex-shrink-0" />
                   <div>
-                    <p className="font-medium">{ach.name}</p>
-                    <p className="text-xs text-slate-400">{ach.description}</p>
+                    <h4 className="font-medium text-sm text-slate-700 dark:text-slate-200">{ach.name}</h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{ach.description}</p>
+                  </div>
+                </li>
+              ))}
+              {userData.achievements.length === 0 && (
+                <p className="text-sm text-slate-500 dark:text-slate-400">No achievements unlocked yet. Keep practicing!</p>
+              )}
+            </ul>
+          </div>
+
+          {/* Leaderboard Card */}
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
+            <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-4 flex items-center">
+              <UserGroupIcon className="h-6 w-6 mr-2 text-green-500 dark:text-green-400" /> Leaderboard
+            </h2>
+            <ul className="space-y-2">
+              {mockLeaderboard.slice(0, 5).map((entry) => (
+                <li 
+                  key={entry.rank} 
+                  className={`flex items-center justify-between p-3 rounded-lg transition-colors 
+                    ${entry.isCurrentUser 
+                      ? 'bg-sky-100 dark:bg-sky-700/50 border-l-4 border-sky-500 dark:border-sky-400'
+                      : 'bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700'}`}
+                >
+                  <div className="flex items-center">
+                    <span className={`font-semibold text-sm w-6 text-center mr-2 ${entry.isCurrentUser ? 'text-sky-600 dark:text-sky-300' : 'text-slate-500 dark:text-slate-400'}`}>{entry.rank}</span>
+                    <UserCircleIcon className={`h-7 w-7 mr-2 ${entry.isCurrentUser ? 'text-sky-500 dark:text-sky-400' : 'text-slate-400 dark:text-slate-500'}`} />
+                    <span className={`text-sm font-medium ${entry.isCurrentUser ? 'text-sky-700 dark:text-sky-200' : 'text-slate-700 dark:text-slate-200'}`}>{entry.name}</span>
+                  </div>
+                  <div className="text-right">
+                    <p className={`text-sm font-semibold ${entry.isCurrentUser ? 'text-sky-600 dark:text-sky-300' : 'text-slate-700 dark:text-slate-200'}`}>{entry.wpm} WPM</p>
+                    <p className={`text-xs ${entry.isCurrentUser ? 'text-sky-500 dark:text-sky-400' : 'text-slate-500 dark:text-slate-400'}`}>{entry.accuracy}% Acc</p>
                   </div>
                 </li>
               ))}
             </ul>
-            {userData.achievements.length === 0 && <p className="text-slate-400 text-sm">Keep practicing to unlock achievements!</p>}
-          </div>
-
-          {/* Leaderboard */}
-          <div className="glass-panel glowing-border-green p-6">
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <UserGroupIcon className="h-6 w-6 mr-2 text-green-400" /> Leaderboard
-            </h2>
-            <div className="relative filter blur-sm pointer-events-none">
-              <ul className="space-y-2">
-                {mockLeaderboard.slice(0, 5).map(user => (
-                  <li key={user.rank} className={`flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${user.isCurrentUser ? 'bg-electric-blue/20 border border-electric-blue/50 shadow-md' : 'hover:bg-slate-700/60'}`}>
-                    <div className="flex items-center">
-                      <span className={`font-bold w-6 text-center text-sm ${user.rank <= 3 ? 'text-yellow-400' : 'text-slate-300'}`}>{user.rank}</span>
-                      <UserCircleIcon className={`h-7 w-7 sm:h-8 sm:w-8 ml-2 mr-3 ${user.isCurrentUser ? 'text-electric-blue' : 'text-slate-500'}`} />
-                      <span className={`text-sm sm:text-base ${user.isCurrentUser ? 'font-semibold text-subtle-white' : 'text-slate-200'}`}>{user.name}</span>
-                    </div>
-                    <div className="text-right">
-                      <p className={`font-semibold text-sm sm:text-base ${user.isCurrentUser ? 'text-electric-blue' : 'text-subtle-white'}`}>{user.wpm} WPM</p>
-                      <p className={`text-xs ${user.isCurrentUser ? 'text-electric-blue/80' : 'text-slate-400'}`}>{user.accuracy}% Acc</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/leaderboard" legacyBehavior>
-                <a className="block text-center mt-4 text-sm text-electric-blue hover:text-violet font-medium">View Full Leaderboard &rarr;</a>
-              </Link>
-            </div>
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 rounded-lg">
-              <p className="text-2xl font-bold text-subtle-white">Coming Soon!</p>
-              <p className="text-md text-slate-300 mt-2">Paid Challenges up to $10,000</p>
-            </div>
+            <Link href="/leaderboard" className="mt-4 inline-flex items-center text-sm font-medium text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 transition-colors group">
+              View Full Leaderboard
+              <ArrowRightIcon className="ml-1.5 h-4 w-4 transform group-hover:translate-x-1 transition-transform"/>
+            </Link>
           </div>
         </div>
       </div>
-      
-      <div className="mt-8 sm:mt-12 text-center">
-        <Link href="/typing-test/typing-exercise" legacyBehavior>
-            <a className="btn-primary group text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-3.5">
-                Start New Typing Test
-                <ArrowRightIcon className="h-5 w-5 ml-2 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
-            </a>
-        </Link>
-      </div>
-
     </div>
   );
 }
