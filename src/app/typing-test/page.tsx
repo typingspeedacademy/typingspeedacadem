@@ -222,6 +222,11 @@ const TypingTestPage = () => {
         <div className="mt-4 text-center text-2xl font-semibold text-sky-700">
           Time Left: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
         </div>
+        {timeLeft === 0 && testCompleted && (
+          <div className="mt-4 text-center text-2xl font-bold text-red-600">
+            Time's Up!
+          </div>
+        )}
       </div>
 
       <div className="w-full max-w-3xl bg-white/70 backdrop-blur-lg p-6 sm:p-8 rounded-2xl shadow-xl border border-sky-200 mb-8">
