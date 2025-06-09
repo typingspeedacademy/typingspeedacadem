@@ -131,30 +131,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Leaderboard Teaser Section */}
+      {/* Leaderboard Teaser Section - Modified to "Coming Soon" */}
       <section className="relative z-10 mt-24 w-full max-w-4xl mx-auto py-16 text-center">
-        <h2 className="text-4xl font-bold text-subtle-white mb-12">
-          Climb the <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-violet">Ranks!</span>
+        <h2 className="text-4xl font-bold text-subtle-white mb-6">
+          Global <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-violet">Leaderboard</span>
         </h2>
-        <p className="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-          See how you stack up against the best! Our global leaderboard tracks top performers. Practice, improve, and earn your spot among the elite.
-        </p>
-        <div className="glass-panel p-8 mb-8">
-          <h3 className="text-2xl font-semibold text-subtle-white mb-6">Top Typer Spotlight</h3>
-          {/* Placeholder for dynamic leaderboard data */}
-          <div className="space-y-3 text-slate-300">
+        <div className="relative glass-panel p-8 mb-8">
+          <div className="absolute inset-0 bg-dark-navy/50 backdrop-blur-sm rounded-lg flex flex-col items-center justify-center z-20">
+            <h3 className="text-3xl font-bold text-electric-blue glow-text-hard mb-4">Coming Soon!</h3>
+            <p className="text-xl text-slate-300 mb-6">Unlock leaderboards and more with our premium courses.</p>
+            <Link 
+              href="/paid-courses" // Path to paid courses page
+              className="inline-block text-lg font-semibold px-10 py-4 rounded-lg bg-gradient-to-r from-electric-blue to-violet text-white shadow-lg hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-opacity-50 transition-all duration-300 ease-in-out"
+            >
+              Explore Premium Courses
+            </Link>
+          </div>
+          {/* Blurred content underneath */}
+          <h3 className="text-2xl font-semibold text-subtle-white mb-6 opacity-30">Top Typer Spotlight</h3>
+          <div className="space-y-3 text-slate-300 opacity-30">
             <p>1. SpeedyKeys - 150 WPM</p>
             <p>2. TypeMasterFlex - 145 WPM</p>
             <p>3. QuickFingers - 142 WPM</p>
           </div>
-          <p className="text-xs text-slate-500 mt-4">Leaderboard data is illustrative.</p>
+          <p className="text-xs text-slate-500 mt-4 opacity-30">Leaderboard data is illustrative.</p>
         </div>
-        <Link 
-          href="/leaderboard" // Adjust link as needed
-          className="inline-block text-lg font-semibold px-10 py-4 rounded-lg bg-gradient-to-r from-electric-blue to-violet text-white shadow-lg hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-opacity-50 transition-all duration-300 ease-in-out"
-        >
-          View Full Leaderboard
-        </Link>
+        {/* Original button removed as it's now part of the blurred overlay */}
       </section>
 
       {/* Testimonials Section */}
