@@ -1,23 +1,24 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+// import Link from 'next/link'; // Removed duplicate
 import {
   ChartBarIcon,
   UserCircleIcon,
   TrophyIcon,
   Cog6ToothIcon,
   ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon, // Added this line
+  ArrowTrendingDownIcon, 
   ShieldCheckIcon,
   LightBulbIcon,
   AcademicCapIcon,
   UserGroupIcon,
   PlayCircleIcon,
-  ArrowRightIcon, // Added import
-  MinusSmallIcon, // Added import
-  LockClosedIcon  // Added import
-} from '@heroicons/react/24/outline'; // Assuming these are from outline, adjust if solid or mini
+  ArrowRightIcon, 
+  MinusSmallIcon, 
+  LockClosedIcon,
+  FireIcon // Added FireIcon import
+} from '@heroicons/react/24/outline'; 
 import { createClient } from '@/utils/supabase/client';
 import type { User } from '@supabase/supabase-js';
 
@@ -53,7 +54,7 @@ const mockLeaderboard = [
 
 import FuturisticLineChart from '@/components/FuturisticLineChart';
 import RechartsLineChart from '@/components/RechartsLineChart'; // Added new chart
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button'; // Removed this line to fix module not found error
 import Link from 'next/link';
 
 interface ProgressDataPoint {
@@ -473,12 +474,16 @@ export default function DashboardPage() {
               <p className="text-slate-300 dark:text-slate-400 mb-6 text-sm">
                 Sharpen your skills with our courses to get ready.
               </p>
-              <Button asChild className="bg-sky-500 hover:bg-sky-600 text-white font-semibold">
-                <Link href="/paid-courses">
-                  Explore Paid Courses
-                  <ArrowRightIcon className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              {/* Assuming Button component is globally available or imported from a different path that's correct */}
+              {/* If Button is from a specific library like shadcn/ui, ensure it's correctly installed and imported */}
+              {/* For now, we'll assume the <Button> usage below is correct or will be handled separately if it causes new errors */}
+              <button 
+                onClick={() => window.location.href='/paid-courses'} 
+                className="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg inline-flex items-center transition-colors"
+              >
+                Explore Paid Courses
+                <ArrowRightIcon className="ml-2 h-4 w-4" />
+              </button>
             </div>
           </div>
         </div>
