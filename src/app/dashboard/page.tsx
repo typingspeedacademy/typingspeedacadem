@@ -136,11 +136,12 @@ export default function DashboardPage() {
           setLessonsCompletedCount(count || 0);
         }
         
-        // Update user name and potentially other static data from user object
+        // Update user name AND RESET wpm/accuracy to 0, awaiting fetch
         setUserData(prevData => ({
-          ...prevData,
+          ...prevData, // Keep other mock data like achievements for now
           name: displayName,
-          // lessonsCompleted will be updated by the specific fetch or displayed directly from lessonsCompletedCount
+          wpm: 0, // Reset, will be updated by fetchProgressData
+          accuracy: 0, // Reset, will be updated by fetchProgressData
         }));
       } else {
         // Handle user not logged in - reset or show guest view
@@ -194,11 +195,11 @@ export default function DashboardPage() {
               // lessonsCompleted is now handled by lessonsCompletedCount state directly
             }));
           } else {
-            // Reset to mock or default if no data
+            // No actual analytics data for the user
             setUserData(prevData => ({
               ...prevData,
-              wpm: mockUserData.wpm, // Or 0 or some placeholder
-              accuracy: mockUserData.accuracy, // Or 0 or some placeholder
+              wpm: 0,
+              accuracy: 0,
               // lessonsCompleted is now handled by lessonsCompletedCount state directly
             }));
           }
