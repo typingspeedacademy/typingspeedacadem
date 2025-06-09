@@ -32,10 +32,10 @@ const freeTierFeatures = [
 import TypingArea from '@/components/TypingArea';
 import StatsDisplay from '@/components/StatsDisplay';
 import SettingsPanel from '@/components/SettingsPanel';
-import { sampleTexts } from '@/data/sampleTexts';
+import { sampleTexts, SampleText } from '@/data/sampleTexts'; // Import SampleText interface
 
 const TypingTestPage = () => {
-  const [text, setText] = useState(sampleTexts[0].text);
+  const [text, setText] = useState(''); // Initialize with empty string
   const [userInput, setUserInput] = useState('');
   const [startTime, setStartTime] = useState<number | null>(null);
   const [endTime, setEndTime] = useState<number | null>(null);
@@ -46,17 +46,46 @@ const TypingTestPage = () => {
   const [duration, setDuration] = useState(60); // seconds
   const [timeLeft, setTimeLeft] = useState(duration);
   const [difficulty, setDifficulty] = useState('medium');
+  const [language, setLanguage] = useState('en'); // Added language state, default to English
   const [user, setUser] = useState<User | null>(null); // Added user state
   const supabase = createClient(); // Initialize Supabase client
 
-  // Fetch user
+  // Function to get a new text based on settings
+  const getNewText = useCallback(() => {
+    const filteredTexts = sampleTexts.filter(
+      (st) => st.difficulty === difficulty && st.language === language
+    );
+    if (filteredTexts.length > 0) {
+      setText(filteredTexts[Math.floor(Math.random() * filteredTexts.length)].text);
+    } else {
+      // Fallback if no text matches criteria (e.g. show any English text of selected difficulty)
+      const fallbackTexts = sampleTexts.filter(st => st.difficulty === difficulty && st.language === 'en');
+      if (fallbackTexts.length > 0) {
+        setText(fallbackTexts[Math.floor(Math.random() * fallbackTexts.length)].text);
+        setLanguage('en'); // Optionally reset language to 'en' if specific language text not found
+      } else {
+         // Fallback to any text if no specific difficulty/language found
+        setText(sampleTexts[Math.floor(Math.random() * sampleTexts.length)].text);
+      }
+    }
+    setUserInput('');
+    setErrors(0);
+    setStartTime(null);
+    setEndTime(null);
+    setTestActive(false);
+    setTestCompleted(false);
+    setTimeLeft(duration);
+  }, [difficulty, language, duration]);
+
+  // Fetch user and initialize text
   useEffect(() => {
     const getUser = async () => {
       const { data: { user: currentUser } } = await supabase.auth.getUser();
       setUser(currentUser);
     };
     getUser();
-  }, [supabase]);
+    getNewText(); // Initialize text on component mount and when settings change
+  }, [supabase, getNewText]); // getNewText is now a dependency
 
   // Timer logic
   useEffect(() => {
@@ -116,9 +145,10 @@ const TypingTestPage = () => {
           wpm: wpm,
           accuracy: accuracy,
           errors: errors,
-          duration_seconds: timeTakenSeconds,
-          text_used: text, // Optional: store the text used for the test
-          difficulty: difficulty, // Optional: store difficulty
+          duration_seconds: timeTakenSeconds, // Ensure this is calculated correctly
+          text_used: text,
+          difficulty: difficulty,
+          language: language, // Save language
         },
       ]);
 
@@ -159,23 +189,14 @@ const TypingTestPage = () => {
   };
 
   const resetTest = () => {
-    // Select a new random text or based on difficulty
-    const newText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)].text;
-    setText(newText);
-    setUserInput('');
-    setStartTime(null);
-    setEndTime(null);
-    setErrors(0);
-    setTestActive(false);
-    setTestCompleted(false);
-    setTimeLeft(duration); // Reset timer on manual reset too
+    getNewText();
   };
 
-  const handleSettingsChange = (newDuration: number, newDifficulty: string) => {
+  const handleSettingsChange = (newDuration: number, newDifficulty: string, newLanguage: string) => {
     setDuration(newDuration);
     setDifficulty(newDifficulty);
-    // Potentially fetch new text based on difficulty
-    resetTest(); // Reset test with new settings
+    setLanguage(newLanguage);
+    // getNewText will be called by the useEffect due to dependency change
   };
 
   return (
@@ -196,6 +217,7 @@ const TypingTestPage = () => {
           onSettingsChange={handleSettingsChange} 
           currentDuration={duration} 
           currentDifficulty={difficulty} 
+          currentLanguage={language} // Pass current language
         />
         <div className="mt-4 text-center text-2xl font-semibold text-sky-700">
           Time Left: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}

@@ -11,9 +11,15 @@ interface TypingAreaProps {
 const TypingArea: React.FC<TypingAreaProps> = ({ textToType, userInput, onInputChange, disabled }) => {
   return (
     <div className="mb-4">
-      <p className="text-lg text-slate-700 p-4 bg-slate-100 rounded-md mb-4 whitespace-pre-wrap font-mono">
-        {textToType}
-      </p>
+      <div className="text-lg text-slate-700 p-4 bg-slate-100 rounded-md mb-4 whitespace-pre-wrap font-mono">
+        {textToType.split('').map((char, index) => {
+          let charClass = '';
+          if (index < userInput.length) {
+            charClass = userInput[index] === char ? 'text-green-500' : 'text-red-500 bg-red-100';
+          }
+          return <span key={index} className={charClass}>{char}</span>;
+        })}
+      </div>
       <textarea
         value={userInput}
         onChange={onInputChange}
