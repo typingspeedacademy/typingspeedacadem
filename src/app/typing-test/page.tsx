@@ -32,7 +32,7 @@ const freeTierFeatures = [
 import TypingArea from '@/components/TypingArea';
 import StatsDisplay from '@/components/StatsDisplay';
 import SettingsPanel from '@/components/SettingsPanel';
-import { sampleTexts, SampleText } from '@/data/sampleTexts'; // Import SampleText interface
+import { sampleTexts, SampleText } from '@/data/sampleTexts';
 
 const TypingTestPage = () => {
   const [text, setText] = useState(''); // Initialize with empty string
@@ -46,7 +46,7 @@ const TypingTestPage = () => {
   const [duration, setDuration] = useState(60); // seconds
   const [timeLeft, setTimeLeft] = useState(duration);
   const [difficulty, setDifficulty] = useState('medium');
-  const [language, setLanguage] = useState('en'); // Added language state, default to English
+  const [language, setLanguage] = useState<'en' | 'es' | 'ar'>('en'); // Added 'ar'
   const [user, setUser] = useState<User | null>(null); // Added user state
   const supabase = createClient(); // Initialize Supabase client
 
@@ -131,31 +131,28 @@ const TypingTestPage = () => {
   };
 
   const saveTestAnalytics = async () => {
-    if (!user || !testCompleted || !startTime || !endTime) return;
+    if (!user) return;
 
-    const wpm = calculateWPM();
-    const accuracy = calculateAccuracy();
-    const timeTakenSeconds = (endTime - startTime) / 1000;
+    const wordsTyped = userInput.trim().split(/\s+/).filter(Boolean).length;
+    const durationInMinutes = testDuration / 60;
+    const calculatedWpm = durationInMinutes > 0 ? Math.round(wordsTyped / durationInMinutes) : 0;
+    const calculatedAccuracy = textToType.length > 0 ? Math.round(((textToType.length - errors) / textToType.length) * 100) : 0;
 
-    const { error } = await supabase
-      .from('user_typing_analytics')
-      .insert([
-        {
-          user_id: user.id,
-          wpm: wpm,
-          accuracy: accuracy,
-          errors: errors,
-          duration_seconds: timeTakenSeconds, // Ensure this is calculated correctly
-          text_used: text,
-          difficulty: difficulty,
-          language: language, // Save language
-        },
-      ]);
-
+    const { error } = await supabase.from('user_typing_analytics').insert([
+      {
+        user_id: user.id,
+        wpm: calculatedWpm,
+        accuracy: calculatedAccuracy,
+        errors: errors,
+        test_duration_seconds: testDuration,
+        text_difficulty: difficulty,
+        text_language: language, // Save the language
+        text_typed: userInput,
+        original_text: textToType,
+      },
+    ]);
     if (error) {
-      console.error('Error saving typing analytics:', error);
-    } else {
-      console.log('Typing analytics saved successfully!');
+      console.error('Error saving analytics:', error);
     }
   };
 
@@ -189,14 +186,14 @@ const TypingTestPage = () => {
   };
 
   const resetTest = () => {
-    getNewText();
+    getNewText(difficulty, language); // Ensure new text respects current language
   };
 
-  const handleSettingsChange = (newDuration: number, newDifficulty: string, newLanguage: string) => {
-    setDuration(newDuration);
+  const handleSettingsChange = (duration: number, newDifficulty: string, newLanguage: string) => {
+    setTestDuration(duration);
     setDifficulty(newDifficulty);
-    setLanguage(newLanguage);
-    // getNewText will be called by the useEffect due to dependency change
+    setLanguage(newLanguage as 'en' | 'es' | 'ar'); // Cast and set language
+    resetTest(); // Reset with new settings
   };
 
   return (
@@ -216,8 +213,8 @@ const TypingTestPage = () => {
         <SettingsPanel 
           onSettingsChange={handleSettingsChange} 
           currentDuration={duration} 
-          currentDifficulty={difficulty} 
-          currentLanguage={language} // Pass current language
+          currentDifficulty={difficulty}
+          currentLanguage={language} // Pass language
         />
         <div className="mt-4 text-center text-2xl font-semibold text-sky-700">
           Time Left: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
@@ -235,6 +232,7 @@ const TypingTestPage = () => {
           userInput={userInput}
           onInputChange={handleInputChange}
           disabled={testCompleted || !testActive && userInput.length > 0} // Disable if completed or if started but not active (e.g. after reset)
+          language={language} // Pass language to TypingArea
         />
       </div>
 

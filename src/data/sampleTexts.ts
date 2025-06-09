@@ -4,7 +4,7 @@ export interface SampleText {
   id: string;
   text: string;
   difficulty: 'easy' | 'medium' | 'hard';
-  language: 'en' | 'es'; // Added language property (e.g., English, Spanish)
+  language: 'en' | 'es' | 'ar'; // Added 'ar' for Arabic
   source?: string;
 }
 
@@ -69,5 +69,27 @@ export const sampleTexts: SampleText[] = [
     difficulty: 'hard',
     language: 'es',
     source: 'IOCCC (ES)',
+  },
+  // Adding Arabic texts
+  {
+    id: 'ar-easy-1',
+    text: 'الثعلب البني السريع يقفز فوق الكلب الكسول. قم بتعبئة صندوقي بخمسة دزينات من أباريق الخمر. هذه جملة بسيطة لممارسة الكتابة.',
+    difficulty: 'easy',
+    language: 'ar',
+    source: 'Pangram (AR)',
+  },
+  {
+    id: 'ar-medium-1',
+    text: 'البرمجة هي عملية إنشاء مجموعة من التعليمات التي تخبر الكمبيوتر بكيفية أداء مهمة ما. وهي تتضمن مهام مثل التحليل وتوليد الخوارزميات وتحديد دقة الخوارزميات واستهلاكها للموارد وتنفيذ الخوارزميات بلغة برمجة مختارة.',
+    difficulty: 'medium',
+    language: 'ar',
+    source: 'Wikipedia (AR)',
+  },
+  {
+    id: 'ar-hard-1',
+    text: 'مسابقة كود سي الدولي المبهم (IOCCC) هي مسابقة برمجة حاسوب لأكثر أكواد سي إبهامًا بشكل إبداعي. تقام سنويًا، وتوصف بأنها "تحتفي بالغموض النحوي للغة سي". تضمنت الإدخالات الفائزة السابقة برنامجًا يحاكي آلة إنجما ومترجم سي مكتوب بلغة سي.',
+    difficulty: 'hard',
+    language: 'ar',
+    source: 'IOCCC (AR)',
   }
 ];

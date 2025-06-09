@@ -6,27 +6,37 @@ interface TypingAreaProps {
   userInput: string;
   onInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   disabled: boolean;
+  language: 'en' | 'es' | 'ar'; // Added language prop
 }
 
-const TypingArea: React.FC<TypingAreaProps> = ({ textToType, userInput, onInputChange, disabled }) => {
+const TypingArea: React.FC<TypingAreaProps> = ({ textToType, userInput, onInputChange, disabled, language }) => {
+  const getCharClass = (char: string, index: number) => {
+    if (index < userInput.length) {
+      return userInput[index] === char ? 'text-green-400' : 'text-red-400 bg-red-900/30';
+    }
+    return 'text-slate-400'; // Untyped characters
+  };
+
   return (
-    <div className="mb-4">
-      <div className="text-xl md:text-2xl text-slate-700 p-4 bg-slate-100 rounded-md mb-4 whitespace-pre-wrap font-mono"> {/* Increased text size */}
-        {textToType.split('').map((char, index) => {
-          let charClass = '';
-          if (index < userInput.length) {
-            charClass = userInput[index] === char ? 'text-green-500' : 'text-red-500 bg-red-100';
-          }
-          return <span key={index} className={charClass}>{char}</span>;
-        })}
+    <div className="w-full max-w-2xl mx-auto p-4 bg-slate-800/50 rounded-lg shadow-xl border border-slate-700">
+      <div 
+        className={`text-xl md:text-2xl p-3 mb-4 font-mono whitespace-pre-wrap break-all leading-relaxed tracking-wide text-slate-300 rounded-md bg-slate-900/70 border border-slate-700 min-h-[100px] ${language === 'ar' ? 'rtl text-right' : 'ltr text-left'}`}
+        dir={language === 'ar' ? 'rtl' : 'ltr'} // Set text direction
+      >
+        {textToType.split('').map((char, index) => (
+          <span key={index} className={getCharClass(char, index)}>
+            {char}
+          </span>
+        ))}
       </div>
       <textarea
         value={userInput}
         onChange={onInputChange}
         disabled={disabled}
-        className="w-full p-3 border border-slate-300 rounded-md focus:ring-sky-500 focus:border-sky-500 resize-none font-mono text-xl md:text-2xl bg-white/90 text-slate-800" /* Increased text size */
-        rows={5}
-        placeholder="Start typing here..."
+        placeholder={disabled ? "Test ended. Press 'Reset' or change settings to start again." : "Start typing here..."}
+        className={`w-full p-3 text-xl md:text-2xl font-mono bg-slate-700/60 text-slate-100 border border-slate-600 rounded-md focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none resize-none transition-colors duration-200 ${language === 'ar' ? 'rtl text-right' : 'ltr text-left'}`}
+        rows={3}
+        dir={language === 'ar' ? 'rtl' : 'ltr'} // Set text direction for textarea
       />
     </div>
   );

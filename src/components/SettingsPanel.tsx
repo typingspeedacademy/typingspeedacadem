@@ -65,6 +65,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onSettingsChange, current
         >
           <option value="en">English</option>
           <option value="es">Español</option> 
+          <option value="ar">العربية</option> {/* Added Arabic option */}
           {/* Add more languages as needed */}
         </select>
       </div>
