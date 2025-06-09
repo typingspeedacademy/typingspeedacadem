@@ -1,29 +1,83 @@
 // src/app/login/page.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { createClient } from '@/utils/supabase/client'; // Import Supabase client
+import { useRouter } from 'next/navigation'; // Import useRouter
+import type { User } from '@supabase/supabase-js'; // Import User type
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null); // State for user session
+
+  const supabase = createClient(); // Initialize Supabase client
+  const router = useRouter(); // Initialize useRouter
+
+  useEffect(() => {
+    const getUserSession = async () => {
+      const { data, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        console.error('Error fetching user session:', sessionError);
+        // Potentially handle this error, e.g., by setting an error state
+        // For now, we'll allow the page to render for login attempt
+      } else if (data.session) {
+        setUser(data.session.user);
+        router.push('/dashboard'); // Redirect to dashboard if user is already logged in
+      } else {
+        // No active session, user needs to log in
+        setUser(null);
+      }
+    };
+    getUserSession();
+  }, [supabase, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    // Basic validation
+    setLoading(true);
+
     if (!email || !password) {
       setError('Please enter both email and password.');
+      setLoading(false);
       return;
     }
-    // TODO: Implement actual login logic here
-    console.log('Login attempt with:', { email, password });
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    // setError('Login failed. Please check your credentials.'); // Example error
-    // On success, redirect or update UI
+
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        console.error('Supabase sign-in error:', signInError);
+        if (signInError.message.includes('Invalid login credentials')) {
+          setError('Invalid email or password. Please try again.');
+        } else if (signInError.message.includes('Email not confirmed')) {
+          setError('Please confirm your email address before logging in.');
+        } else {
+          setError('Login failed. Please check your credentials or try again later.');
+        }
+      } else {
+        // On successful login, Supabase handles session. Redirect to dashboard.
+        // The useEffect hook might also catch this, but an explicit push is good.
+        router.push('/dashboard');
+      }
+    } catch (err: any) {
+      console.error('Login submission error:', err);
+      setError('An unexpected error occurred during login. Please try again.');
+    }\ finally {
+      setLoading(false);
+    }
   };
+
+  // If user is already identified by useEffect and redirecting, optionally show loading or null
+  if (user) {
+    return <div className="min-h-screen flex items-center justify-center"><p>Loading dashboard...</p></div>; 
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -101,9 +155,10 @@ const LoginPage = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-150 ease-in-out shadow-md hover:shadow-lg"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-150 ease-in-out shadow-md hover:shadow-lg disabled:opacity-50"
             >
-              Sign in
+              {loading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
         </form>
