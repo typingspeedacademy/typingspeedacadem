@@ -20,7 +20,7 @@ const TypingArea: React.FC<TypingAreaProps> = ({ textToType, userInput, onInputC
   return (
     <div className="w-full max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-xl border border-gray-300">
       <div 
-        className={`text-xl md:text-2xl p-3 mb-4 font-sans whitespace-pre-wrap break-all leading-relaxed tracking-wide text-gray-800 rounded-md bg-gray-100 border border-gray-300 min-h-[100px] ${language === 'ar' ? 'rtl text-right' : 'ltr text-left'}`
+        className={`text-xl md:text-2xl p-3 mb-4 font-sans whitespace-pre-wrap break-all leading-relaxed tracking-wide text-gray-800 rounded-md bg-gray-100 border border-gray-300 min-h-[100px] ${language === 'ar' ? 'rtl text-right' : 'ltr text-left'}`}
         dir={language === 'ar' ? 'rtl' : 'ltr'} // Set text direction
       >
         {textToType.split('').map((char, index) => (
