@@ -25,18 +25,6 @@ interface RechartsLineChartProps {
 }
 
 const RechartsLineChart: React.FC<RechartsLineChartProps> = ({ data, className, timeFrame }) => {
-  const chartData = useMemo(() => {
-    if (!data || data.length === 0) return [{ date: 'N/A', wpm: 0, accuracy: 0, timestamp: 0, name: 'N/A' }];
-    // Sort data by date to ensure left-to-right progression
-    return [...data]
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-      .map(item => ({
-        ...item,
-        timestamp: new Date(item.date).getTime(),
-        name: formatXAxis(item.date, timeFrame), // Pass original date string
-      }));
-  }, [data, timeFrame]);
-
   const formatXAxis = (dateString: string, currentTF?: typeof timeFrame) => {
     if (!dateString || dateString === 'N/A') return 'N/A';
     try {
@@ -47,15 +35,14 @@ const RechartsLineChart: React.FC<RechartsLineChartProps> = ({ data, className, 
         case 'monthly':
           return dateObj.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
         case 'weekly':
-          // Assuming dateString for weekly is the start of the week
           const weekNumber = Math.ceil(dateObj.getDate() / 7);
           return `W${weekNumber}, ${dateObj.toLocaleDateString('en-US', { month: 'short' })}`;
         case 'daily':
           return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         case 'hourly':
-        case 'minutely': // Minutely and Hourly can share similar formatting for simplicity here
+        case 'minutely': 
           return dateObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-        default: // Fallback if timeFrame is not set or unrecognized
+        default: 
           return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       }
     } catch (error) {
@@ -63,6 +50,17 @@ const RechartsLineChart: React.FC<RechartsLineChartProps> = ({ data, className, 
       return dateString;
     }
   };
+
+  const chartData = useMemo(() => {
+    if (!data || data.length === 0) return [{ date: 'N/A', wpm: 0, accuracy: 0, timestamp: 0, name: 'N/A' }];
+    return [...data]
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .map(item => ({
+        ...item,
+        timestamp: new Date(item.date).getTime(),
+        name: formatXAxis(item.date, timeFrame), 
+      }));
+  }, [data, timeFrame]);
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
