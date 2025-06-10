@@ -14,13 +14,13 @@ const TypingArea: React.FC<TypingAreaProps> = ({ textToType, userInput, onInputC
     if (index < userInput.length) {
       return userInput[index] === char ? 'text-green-400' : 'text-red-400 bg-red-900/30';
     }
-    return 'text-slate-400'; // Untyped characters
+    return 'text-gray-400'; // Untyped characters
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-4 bg-slate-800/50 rounded-lg shadow-xl border border-slate-700">
+    <div className="w-full max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-xl border border-gray-300">
       <div 
-        className={`text-xl md:text-2xl p-3 mb-4 font-mono whitespace-pre-wrap break-all leading-relaxed tracking-wide text-slate-300 rounded-md bg-slate-900/70 border border-slate-700 min-h-[100px] ${language === 'ar' ? 'rtl text-right' : 'ltr text-left'}`}
+        className={`text-xl md:text-2xl p-3 mb-4 font-mono whitespace-pre-wrap break-all leading-relaxed tracking-wide text-gray-700 rounded-md bg-gray-100 border border-gray-300 min-h-[100px] ${language === 'ar' ? 'rtl text-right' : 'ltr text-left'}`}
         dir={language === 'ar' ? 'rtl' : 'ltr'} // Set text direction
       >
         {textToType.split('').map((char, index) => (
@@ -34,7 +34,7 @@ const TypingArea: React.FC<TypingAreaProps> = ({ textToType, userInput, onInputC
         onChange={onInputChange}
         disabled={disabled}
         placeholder={disabled ? "Test ended. Press 'Reset' or change settings to start again." : "Start typing here..."}
-        className={`w-full p-3 text-xl md:text-2xl font-mono bg-slate-700/60 text-slate-100 border border-slate-600 rounded-md focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none resize-none transition-colors duration-200 ${language === 'ar' ? 'rtl text-right' : 'ltr text-left'}`}
+        className={`w-full p-3 text-xl md:text-2xl font-mono bg-gray-50 text-gray-800 border border-gray-300 rounded-md focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none resize-none transition-colors duration-200 ${language === 'ar' ? 'rtl text-right' : 'ltr text-left'}`}
         rows={3}
         dir={language === 'ar' ? 'rtl' : 'ltr'} // Set text direction for textarea
       />
