@@ -92,9 +92,9 @@ const RechartsLineChart: React.FC<RechartsLineChartProps> = ({ data, className, 
             dataKey="name" 
             stroke="#9ca3af"
             tick={{ fontSize: 10, fill: '#9ca3af' }} 
-            // angle={(timeFrame === 'monthly' || timeFrame === 'weekly') ? -35 : 0} 
-            // textAnchor={(timeFrame === 'monthly' || timeFrame === 'weekly') ? 'end' : 'middle'}
-            // dy={(timeFrame === 'monthly' || timeFrame === 'weekly') ? 10 : 5}
+            angle={(timeFrame === 'monthly' || timeFrame === 'weekly') ? -35 : 0} 
+            textAnchor={(timeFrame === 'monthly' || timeFrame === 'weekly') ? 'end' : 'middle'}
+            dy={(timeFrame === 'monthly' || timeFrame === 'weekly') ? 10 : 5}
             interval="preserveStartEnd" 
           />
           <YAxis yAxisId="left" stroke="#9ca3af" tick={{ fontSize: 10, fill: '#9ca3af' }} label={{ value: 'WPM', angle: -90, position: 'insideLeft', fill: '#9ca3af', fontSize: 12, dx: -5 }} />
