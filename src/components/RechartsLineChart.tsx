@@ -67,10 +67,13 @@ const RechartsLineChart: React.FC<RechartsLineChartProps> = ({ data, className, 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       const dataPoint = payload[0].payload;
+      const displayDate = formatXAxis(dataPoint.date, timeFrame);
+      const displayTime = new Date(dataPoint.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      const dateTimeString = `${displayDate} - ${displayTime}`;
       return (
         <div className="bg-gray-800 bg-opacity-90 text-white p-3 rounded-lg shadow-lg border border-gray-700">
           <p className="text-sm font-semibold mb-1">
-            {formatXAxis(dataPoint.date, timeFrame)} - {new Date(dataPoint.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true})}
+            {dateTimeString}
           </p>
           <p className="text-sm text-sky-400">{`Speed (WPM): ${dataPoint.wpm}`}</p>
           <p className="text-sm text-teal-400">{`Accuracy: ${dataPoint.accuracy}%`}</p>
@@ -82,16 +85,16 @@ const RechartsLineChart: React.FC<RechartsLineChartProps> = ({ data, className, 
 
   return (
     <div className={`w-full ${className} bg-slate-900 p-4 rounded-xl shadow-2xl`}>
-      <ResponsiveContainer width="100%" height={300}> {/* Adjusted height for better visibility */}
-        <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 25 }}> {/* Increased bottom margin for angled labels */}
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" /> {/* Darker gray grid */}
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 25 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
           <XAxis 
             dataKey="name" 
-            stroke="#9ca3af" /* Lighter gray for axis line */
+            stroke="#9ca3af"
             tick={{ fontSize: 10, fill: '#9ca3af' }} 
-            angle={(timeFrame === 'monthly' || timeFrame === 'weekly') ? -35 : 0} // Angle for monthly/weekly
-            textAnchor={(timeFrame === 'monthly' || timeFrame === 'weekly') ? 'end' : 'middle'}
-            dy={(timeFrame === 'monthly' || timeFrame === 'weekly') ? 10 : 5}
+            // angle={(timeFrame === 'monthly' || timeFrame === 'weekly') ? -35 : 0} 
+            // textAnchor={(timeFrame === 'monthly' || timeFrame === 'weekly') ? 'end' : 'middle'}
+            // dy={(timeFrame === 'monthly' || timeFrame === 'weekly') ? 10 : 5}
             interval="preserveStartEnd" 
           />
           <YAxis yAxisId="left" stroke="#9ca3af" tick={{ fontSize: 10, fill: '#9ca3af' }} label={{ value: 'WPM', angle: -90, position: 'insideLeft', fill: '#9ca3af', fontSize: 12, dx: -5 }} />
@@ -103,8 +106,8 @@ const RechartsLineChart: React.FC<RechartsLineChartProps> = ({ data, className, 
             iconType="circle"
             wrapperStyle={{ color: '#e5e7eb', fontSize: '12px', paddingTop: '10px' }}
           />
-          <Line yAxisId="left" type="monotone" dataKey="wpm" name="Speed (WPM)" stroke="#38bdf8" strokeWidth={2} dot={{ r: 4, fill: '#38bdf8', strokeWidth:1, stroke: '#0ea5e9' }} activeDot={{ r: 6, fill: '#38bdf8', stroke: '#0284c7' }} /> {/* Sky blue for WPM */}
-          <Line yAxisId="right" type="monotone" dataKey="accuracy" name="Accuracy (%)" stroke="#2dd4bf" strokeWidth={2} dot={{ r: 4, fill: '#2dd4bf', strokeWidth:1, stroke: '#14b8a6' }} activeDot={{ r: 6, fill: '#2dd4bf', stroke: '#0d9488' }} /> {/* Teal for Accuracy */}
+          <Line yAxisId="left" type="monotone" dataKey="wpm" name="Speed (WPM)" stroke="#38bdf8" strokeWidth={2} dot={{ r: 4, fill: '#38bdf8', strokeWidth:1, stroke: '#0ea5e9' }} activeDot={{ r: 6, fill: '#38bdf8', stroke: '#0284c7' }} />
+          <Line yAxisId="right" type="monotone" dataKey="accuracy" name="Accuracy (%)" stroke="#2dd4bf" strokeWidth={2} dot={{ r: 4, fill: '#2dd4bf', strokeWidth:1, stroke: '#14b8a6' }} activeDot={{ r: 6, fill: '#2dd4bf', stroke: '#0d9488' }} />
         </LineChart>
       </ResponsiveContainer>
     </div>
