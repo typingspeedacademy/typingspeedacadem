@@ -16,7 +16,6 @@ const Footer = () => {
               <li><Link href="/about-us" className="hover:text-blue-300 transition-colors duration-300">About Us</Link></li>
               {/* Add other relevant quick links if needed */}
               <li><Link href="/typing-test" className="hover:text-blue-300 transition-colors duration-300">Typing Test</Link></li>
-              <li><Link href="/leaderboard" className="hover:text-blue-300 transition-colors duration-300">Leaderboard</Link></li>
             </ul>
           </div>
 
@@ -45,8 +44,7 @@ const Footer = () => {
               <li>
                 <a href="https://www.instagram.com/typingspeedacademy/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-300 transition-colors duration-300 flex items-center">
                   {/* Using a generic GlobeAltIcon for Instagram, replace if a specific Instagram icon is available in heroicons */}
-                  <GlobeAltIcon className="h-5 w-5 mr-2" />
-                  Instagram
+                  <GlobeAltIcon className="h-6 w-6" /> {/* Increased icon size slightly */}
                 </a>
               </li>
               {/* Add other social media links here */}

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react'; // Added useMemo
 import {
   LineChart,
   Line,
@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ReferenceLine
 } from 'recharts';
 
 interface ProgressDataPoint {
@@ -28,7 +29,7 @@ const RechartsLineChart: React.FC<RechartsLineChartProps> = ({ data, className, 
   // Ensure data has at least one point for the chart to render, or provide default if empty
   const chartData = data.length > 0 ? data : [{ date: 'N/A', wpm: 0, accuracy: 0 }];
 
-  const formatXAxisTick = (tick: string) => {
+  const formatXAxis = (tick: string) => { // Renamed from formatXAxisTick
     if (!tick || tick === 'N/A') return 'N/A';
     try {
       const dateObj = new Date(tick);
@@ -60,73 +61,61 @@ const RechartsLineChart: React.FC<RechartsLineChartProps> = ({ data, className, 
     }
   };
 
+  const formattedData = useMemo(() => {
+    return data.map(item => ({
+      ...item,
+      // Ensure date is a number for proper domain calculation if needed
+      timestamp: new Date(item.date).getTime(), // Changed item.timestamp to item.date
+      // Format date for XAxis tick display based on timeFrame
+      name: formatXAxis(new Date(item.date).toISOString()), // Changed item.timestamp to item.date and ensure it's a string for new Date()
+      wpm: item.wpm,
+      accuracy: item.accuracy,
+    }));
+  }, [data, timeFrame]);
+
+  // Custom Tooltip
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const dataPoint = payload[0].payload;
+      return (
+        <div className="bg-gray-800 bg-opacity-80 text-white p-3 rounded-lg shadow-lg border border-gray-700">
+          <p className="text-sm font-semibold mb-1">{`${new Date(dataPoint.timestamp).toLocaleDateString()} ${new Date(dataPoint.timestamp).toLocaleTimeString()}`}</p>
+          <p className="text-sm text-green-400">{`Speed (WPM): ${dataPoint.wpm}`}</p>
+          <p className="text-sm text-orange-400">{`Accuracy: ${dataPoint.accuracy}%`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
-    <div className={`bg-slate-800 p-4 rounded-lg shadow-xl ${className || ''}`} style={{ height: '350px', width: '100%' }}>
+    <div className={`w-full ${className} bg-gray-900 p-4 rounded-xl shadow-2xl`}>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          data={chartData}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 0, // Adjusted left margin for better YAxis label visibility
-            bottom: 20, // Increased bottom margin for better XAxis label visibility
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+        <LineChart data={formattedData} margin={{ top: 5, right: 30, left: 0, bottom: 20 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#4A5568" /> {/* Darker grid lines */}
           <XAxis 
-            dataKey="date" 
-            stroke="#9ca3af" 
-            tick={{ fontSize: 10 }} // Slightly smaller font for more ticks
-            padding={{ left: 10, right: 10 }}
-            tickFormatter={formatXAxisTick} // Use the dynamic formatter
-            interval="preserveStartEnd" // Show start and end ticks, let Recharts decide others
-            // minTickGap={50} // Adjust gap between ticks if they overlap
+            dataKey="name" 
+            stroke="#A0AEC0" /* Light gray ticks */
+            tick={{ fontSize: 10, fill: '#A0AEC0' }} 
+            angle={timeFrame === 'monthly' ? -30 : 0} // Removed 'allTime'
+            textAnchor={timeFrame === 'monthly' ? 'end' : 'middle'} // Removed 'allTime'
+            dy={timeFrame === 'monthly' ? 10 : 5} // Removed 'allTime'
+            interval="preserveStartEnd" // Show first and last tick
           />
-          <YAxis 
-            stroke="#9ca3af" 
-            tick={{ fontSize: 12 }} 
-            yAxisId="left"
-            label={{ value: 'WPM', angle: -90, position: 'insideLeft', fill: '#00f0ff', fontSize: 14, dy: -10, dx: -5 }}
-            domain={[0, (dataMax: number) => Math.max(100, dataMax + 20)]} // Ensure WPM axis goes at least to 100 or slightly above max
+          <YAxis yAxisId="left" stroke="#A0AEC0" tick={{ fontSize: 10, fill: '#A0AEC0' }} label={{ value: 'WPM', angle: -90, position: 'insideLeft', fill: '#A0AEC0', fontSize: 12, dx: -5 }} />
+          <YAxis yAxisId="right" orientation="right" stroke="#A0AEC0" tick={{ fontSize: 10, fill: '#A0AEC0' }} domain={[0, 100]} label={{ value: 'Accuracy (%)', angle: 90, position: 'insideRight', fill: '#A0AEC0', fontSize: 12, dx: 5 }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(100, 116, 139, 0.1)' }}/>
+          <Legend 
+            verticalAlign="bottom" 
+            height={36} 
+            iconType="circle"
+            wrapperStyle={{ color: '#E2E8F0', fontSize: '12px' }}
           />
-          <YAxis 
-            stroke="#9ca3af" 
-            tick={{ fontSize: 12 }} 
-            yAxisId="right"
-            orientation="right"
-            label={{ value: 'Accuracy (%)', angle: -90, position: 'insideRight', fill: '#ff00f7', fontSize: 14, dy: 40, dx: -5 }}
-            domain={[0, 100]} // Accuracy is 0-100
-            tickFormatter={(tick) => `${tick}%`}
-          />
-          <Tooltip
-            contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '0.5rem' }}
-            labelStyle={{ color: '#e5e7eb', fontWeight: 'bold' }}
-            itemStyle={{ color: '#9ca3af' }}
-            formatter={(value: number, name: string) => {
-              return name === 'accuracy' ? [`${value}%`, 'Accuracy'] : [value, 'WPM'];
-            }}
-          />
-          <Legend wrapperStyle={{ color: '#e5e7eb', paddingTop: '10px' }} />
-          <Line 
-            yAxisId="left"
-            type="monotone" 
-            dataKey="wpm" 
-            stroke="#00f0ff" 
-            strokeWidth={2.5} 
-            activeDot={{ r: 7, stroke: '#fff', strokeWidth: 2, fill: '#00f0ff' }} 
-            dot={{ r: 4, fill: '#00f0ff', strokeWidth:0 }}
-            name="Speed (WPM)"
-          />
-          <Line 
-            yAxisId="right"
-            type="monotone" 
-            dataKey="accuracy" 
-            stroke="#ff00f7" 
-            strokeWidth={2.5} 
-            activeDot={{ r: 7, stroke: '#fff', strokeWidth: 2, fill: '#ff00f7' }} 
-            dot={{ r: 4, fill: '#ff00f7', strokeWidth:0 }}
-            name="Accuracy (%)"
-          />
+          <Line yAxisId="left" type="monotone" dataKey="wpm" name="Speed (WPM)" stroke="#34D399" strokeWidth={2} dot={{ r: 4, fill: '#34D399', strokeWidth:1, stroke: '#10B981' }} activeDot={{ r: 6, fill: '#34D399', stroke: '#059669' }} />
+          <Line yAxisId="right" type="monotone" dataKey="accuracy" name="Accuracy (%)" stroke="#F97316" strokeWidth={2} dot={{ r: 4, fill: '#F97316', strokeWidth:1, stroke: '#EA580C' }} activeDot={{ r: 6, fill: '#F97316', stroke: '#D97706' }} />
+          
+          {/* Optional: Add a reference line for average WPM or Accuracy */}
+          {/* <ReferenceLine yAxisId="left" y={averageWpm} label="Avg WPM" stroke="#60A5FA" strokeDasharray="3 3" /> */}
         </LineChart>
       </ResponsiveContainer>
     </div>
