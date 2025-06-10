@@ -13,12 +13,24 @@ const Header = () => {
 
   useEffect(() => {
     const getUserSession = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) {
-        console.error('Error fetching user session:', error);
+      try {
+        const { data, error } = await supabase.auth.getUser();
+        if (error) {
+          // AuthSessionMissingError is a specific case we want to handle gracefully
+          if (error.name === 'AuthSessionMissingError') {
+            console.warn('Auth session missing in Header, expected on auth pages.');
+            setUser(null);
+          } else {
+            console.error('Error fetching user session in Header:', error);
+            setUser(null);
+          }
+        } else {
+          setUser(data.user);
+        }
+      } catch (e: any) {
+        // Catch any other unexpected errors during getUser()
+        console.error('Unexpected error in getUserSession in Header:', e);
         setUser(null);
-      } else {
-        setUser(data.user);
       }
     };
 
