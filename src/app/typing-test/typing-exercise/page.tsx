@@ -490,14 +490,7 @@ export default function TypingExercisePage() {
                   {preTestCountdown}
                 </div>
               ) : (
-                currentSentence.split('').map((char: string, index: number) => {
-                  let charClass = '';
-                  if (index < typedText.length) {
-                    charClass = char === typedText[index] ? 'text-green-400' : 'text-red-500 underline';
-                  }
-                  if (index === typedText.length) charClass += ' animate-pulse-cursor'; // Simple cursor
-                  return <span key={index} className={charClass}>{char}</span>;
-                })
+                getHighlightedText()
               )}
             </div>
 
