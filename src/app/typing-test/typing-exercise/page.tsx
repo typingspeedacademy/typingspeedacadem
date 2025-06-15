@@ -152,10 +152,20 @@ export default function TypingExercisePage() {
   const [timeLeft, setTimeLeft] = useState(selectedTime);
   const [timerActive, setTimerActive] = useState(false);
   const [testFinished, setTestFinished] = useState(false);
-  const [results, setResults] = useState({ wpm: 0, accuracy: 0, errors: 0, typedChars: 0 });
+  const [results, setResults] = useState<{ wpm: number; accuracy: number; score: number; errors: number; typedChars: number }>({ wpm: 0, accuracy: 0, score: 0, errors: 0, typedChars: 0 });
+  const [showStartNotification, setShowStartNotification] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
   const inputRef = useRef<HTMLInputElement>(null); // Ref for the hidden input
+
+  useEffect(() => {
+    if (showStartNotification) {
+      const timer = setTimeout(() => {
+        setShowStartNotification(false);
+      }, 2000); // Hide after 2 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [showStartNotification]);
 
   useEffect(() => {
     // Fetch user session
@@ -192,7 +202,7 @@ export default function TypingExercisePage() {
     setTestFinished(false);
     setTimerActive(false);
     setTypedText('');
-    setResults({ wpm: 0, accuracy: 0, errors: 0, typedChars: 0 });
+    setResults({ wpm: 0, accuracy: 0, score: 0, errors: 0, typedChars: 0 });
   }, [selectedDifficulty, selectedLanguage, selectedTime, loadNewSentence]);
 
   useEffect(() => {
@@ -302,10 +312,12 @@ export default function TypingExercisePage() {
     if (intermediate) {
         // Accumulate results for intermediate calculations (e.g., when a sentence is completed before time runs out)
         setResults(prevResults => ({
-            wpm: prevResults.wpm + wpm, // This WPM accumulation might need rethinking for overall WPM
-            accuracy: accuracy, // Accuracy should probably be an average or final calculation
+            ...prevResults, // Preserve existing score if any, or other properties
+            wpm: prevResults.wpm + wpm, 
+            accuracy: accuracy, 
             errors: prevResults.errors + errorCount,
-            typedChars: prevResults.typedChars + typedText.length
+            typedChars: prevResults.typedChars + typedText.length,
+            score: prevResults.score // Ensure score is carried over or updated appropriately
         }));
         setStartTime(Date.now()); // Reset start time for the next sentence segment
     } else {
@@ -316,11 +328,13 @@ export default function TypingExercisePage() {
         const finalAccuracy = totalTypedChars > 0 ? Math.round((totalCorrectChars / totalTypedChars) * 100) : 0;
         const finalWpm = selectedTime > 0 ? Math.round((totalTypedChars / 5) / (selectedTime / 60)) : 0; // Standard WPM: (chars/5) / minutes
 
+        const score = Math.round((finalWpm * (finalAccuracy / 100)) * (1 + (selectedDifficulty.id === 'hard' ? 0.2 : selectedDifficulty.id === 'medium' ? 0.1 : 0)));
         const finalResults = {
             wpm: finalWpm,
             accuracy: finalAccuracy,
             errors: totalErrors,
-            typedChars: totalTypedChars
+            typedChars: totalTypedChars,
+            score: score
         };
         setResults(finalResults);
 
@@ -372,11 +386,10 @@ export default function TypingExercisePage() {
     setTimeLeft(selectedTime);
     loadNewSentence();
     setTypedText(''); // Clear previously typed text
-    setResults({ wpm: 0, accuracy: 0, errors: 0, typedChars: 0 });
+    setResults({ wpm: 0, accuracy: 0, score: 0, errors: 0, typedChars: 0 });
     setStartTime(null);
-    if (inputRef.current) {
-      inputRef.current.focus(); // Focus the hidden input
-    }
+    inputRef.current?.focus();
+    setShowStartNotification(true);
   };
 
   const getHighlightedText = () => {
@@ -392,6 +405,11 @@ export default function TypingExercisePage() {
   return (
     <div dir={selectedLanguage === 'arabic' ? 'rtl' : 'ltr'} className="min-h-screen bg-gradient-to-br from-dark-navy via-black to-violet text-subtle-white flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 transition-all duration-500 ease-in-out">
       <main className="container mx-auto max-w-4xl w-full glass-panel p-6 sm:p-8 md:p-10 border border-violet/50 shadow-2xl shadow-violet/30 rounded-xl">
+        {showStartNotification && (
+          <div className="mb-4 p-3 text-center text-lg font-semibold text-white bg-green-500 rounded-md shadow-lg">
+            Test Started!
+          </div>
+        )}
         {!testFinished ? (
           <>
             {/* Settings Row */}
@@ -472,8 +490,9 @@ export default function TypingExercisePage() {
                         Start Typing
                     </button>
                     <p className="text-slate-400 mt-3 text-sm">Click or start typing to begin the test.</p>
-                </div>
-            )}
+                  </div>
+              )}
+        {/* Existing code for results display, etc. */}
 
             <Keyboard layout={keyboardLayouts[selectedLanguage] || keyboardLayouts.english} pressedKeys={pressedKeys} nextChar={typedText.length < currentSentence.length ? currentSentence[typedText.length] : null} language={selectedLanguage} />
 
