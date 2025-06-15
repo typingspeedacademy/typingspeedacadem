@@ -135,6 +135,8 @@ export default function DashboardPage() {
           .select('*', { count: 'exact', head: true })
           .eq('user_id', currentUser.id);
 
+        console.log('Dashboard: Fetched lessons count:', count, 'for user ID:', currentUser.id); // DEBUG LINE
+
         if (countError) {
           console.error('Error fetching lessons completed count:', countError);
         } else {
