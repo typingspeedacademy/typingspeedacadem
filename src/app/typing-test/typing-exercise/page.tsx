@@ -418,7 +418,7 @@ export default function TypingExercisePage() {
   };
 
   const getHighlightedText = () => {
-    return currentSentence.split('').map((char, index) => {
+    return currentSentence.split('').map((char: string, index: number) => {
       let color = 'text-slate-400';
       if (index < typedText.length) {
         color = typedText[index] === char ? 'text-electric-blue' : 'text-red-500';
@@ -490,14 +490,14 @@ export default function TypingExercisePage() {
                   {preTestCountdown}
                 </div>
               ) : (
-              {currentSentence.split('').map((char, index) => {
-                let charClass = '';
-                if (index < typedText.length) {
-                  charClass = char === typedText[index] ? 'text-green-400' : 'text-red-500 underline';
-                }
-                if (index === typedText.length) charClass += ' animate-pulse-cursor'; // Simple cursor
-                return <span key={index} className={charClass}>{char}</span>;
-              })}
+                currentSentence.split('').map((char: string, index: number) => {
+                  let charClass = '';
+                  if (index < typedText.length) {
+                    charClass = char === typedText[index] ? 'text-green-400' : 'text-red-500 underline';
+                  }
+                  if (index === typedText.length) charClass += ' animate-pulse-cursor'; // Simple cursor
+                  return <span key={index} className={charClass}>{char}</span>;
+                })
               )}
             </div>
 
