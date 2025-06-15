@@ -204,7 +204,7 @@ const TypingTestPage = () => {
   return (
     <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 min-h-screen flex flex-col items-center">
       <h1 className="text-4xl sm:text-5xl font-semibold text-center text-slate-800 mb-8 sm:mb-12">
-        Typing <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Challenge</span>
+        Free <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Exercises</span>
       </h1>
       {/* Add a message if user is not logged in */} 
       {!user && (
