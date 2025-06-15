@@ -36,6 +36,7 @@ import { sampleTexts, SampleText } from '@/data/sampleTexts';
 
 const TypingTestPage = () => {
   const [text, setText] = useState(''); // Initialize with empty string
+  const [currentLessonId, setCurrentLessonId] = useState<string | null>(null); // Added to store current lesson ID
   const [userInput, setUserInput] = useState('');
   const [startTime, setStartTime] = useState<number | null>(null);
   const [endTime, setEndTime] = useState<number | null>(null);
@@ -56,16 +57,22 @@ const TypingTestPage = () => {
       (st) => st.difficulty === difficulty && st.language === language
     );
     if (filteredTexts.length > 0) {
-      setText(filteredTexts[Math.floor(Math.random() * filteredTexts.length)].text);
+      const selectedText = filteredTexts[Math.floor(Math.random() * filteredTexts.length)];
+      setText(selectedText.text);
+      setCurrentLessonId(selectedText.id); // Set current lesson ID
     } else {
       // Fallback if no text matches criteria (e.g. show any English text of selected difficulty)
       const fallbackTexts = sampleTexts.filter(st => st.difficulty === difficulty && st.language === 'en');
       if (fallbackTexts.length > 0) {
-        setText(fallbackTexts[Math.floor(Math.random() * fallbackTexts.length)].text);
+        const selectedText = fallbackTexts[Math.floor(Math.random() * fallbackTexts.length)];
+        setText(selectedText.text);
+        setCurrentLessonId(selectedText.id); // Set current lesson ID
         setLanguage('en'); // Optionally reset language to 'en' if specific language text not found
       } else {
          // Fallback to any text if no specific difficulty/language found
-        setText(sampleTexts[Math.floor(Math.random() * sampleTexts.length)].text);
+        const selectedText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
+        setText(selectedText.text);
+        setCurrentLessonId(selectedText.id); // Set current lesson ID
       }
     }
     setUserInput('');
@@ -156,6 +163,45 @@ const TypingTestPage = () => {
     }
   };
 
+  const saveCompletedLesson = async () => {
+    if (!user || !currentLessonId) {
+      console.log('User not logged in or lesson ID not set, skipping save completed lesson.');
+      return;
+    }
+
+    // Check if the lesson is already completed by the user to avoid duplicates
+    const { data: existingCompletion, error: fetchError } = await supabase
+      .from('user_completed_lessons')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('lesson_id', currentLessonId)
+      .maybeSingle();
+
+    if (fetchError) {
+      console.error('Error checking existing lesson completion:', fetchError);
+      return; // Don't proceed if there's an error checking
+    }
+
+    if (existingCompletion) {
+      console.log('Lesson already marked as completed for this user.');
+      return; // Lesson already completed, no need to insert again
+    }
+
+    const { error: insertError } = await supabase.from('user_completed_lessons').insert([
+      {
+        user_id: user.id,
+        lesson_id: currentLessonId,
+        // completed_at is handled by the database default (NOW())
+      },
+    ]);
+
+    if (insertError) {
+      console.error('Error saving completed lesson:', insertError);
+    } else {
+      console.log('Lesson completion saved successfully for lesson ID:', currentLessonId);
+    }
+  };
+
   const endTest = () => {
     setEndTime(Date.now());
     setTestActive(false);
@@ -163,12 +209,13 @@ const TypingTestPage = () => {
     // saveTestAnalytics will be called in a useEffect dependent on testCompleted
   };
 
-  // Save analytics when test is completed
+  // Save analytics and completed lesson when test is completed
   useEffect(() => {
     if (testCompleted) {
       saveTestAnalytics();
+      saveCompletedLesson(); // Call saveCompletedLesson here
     }
-  }, [testCompleted]); // Dependencies: testCompleted, saveTestAnalytics (if it's memoized with useCallback)
+  }, [testCompleted]); // Dependencies: testCompleted, saveTestAnalytics, saveCompletedLesson
 
   const calculateWPM = () => {
     if (!startTime || !endTime || text.length === 0) return 0;
