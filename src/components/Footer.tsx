@@ -27,56 +27,56 @@ const TwitterIcon = () => (
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white py-12"> {/* Increased padding for more space */}
+    <footer className="bg-slate-900 text-slate-300 py-16"> {/* Increased padding for more space */}
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Navigation Links */}
           <div>
-            <h5 className="font-semibold text-lg mb-3 text-sky-400">Quick Links</h5>
+            <h5 className="font-bold text-md mb-4 text-sky-500 uppercase tracking-wider">Quick Links</h5>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-sky-300 transition-colors duration-300">Home</Link></li>
-              <li><Link href="/about-us" className="hover:text-sky-300 transition-colors duration-300">About Us</Link></li>
+              <li><Link href="/" className="hover:text-sky-400 transition-colors duration-300">Home</Link></li>
+              <li><Link href="/about-us" className="hover:text-sky-400 transition-colors duration-300">About Us</Link></li>
               {/* Add other relevant quick links if needed */}
-              <li><Link href="/typing-test" className="hover:text-sky-300 transition-colors duration-300">Typing Test</Link></li>
+              <li><Link href="/typing-test" className="hover:text-sky-400 transition-colors duration-300">Typing Test</Link></li>
             </ul>
           </div>
 
           {/* Policy Links */}
           <div>
-            <h5 className="font-semibold text-lg mb-3 text-sky-400">Legal</h5>
+            <h5 className="font-bold text-md mb-4 text-sky-500 uppercase tracking-wider">Legal</h5>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/policies#privacy-policy" className="hover:text-sky-300 transition-colors duration-300">Privacy Policy</Link></li>
-              <li><Link href="/policies#terms-of-service" className="hover:text-sky-300 transition-colors duration-300">Terms of Service</Link></li>
-              <li><Link href="/policies#cookie-policy" className="hover:text-sky-300 transition-colors duration-300">Cookie Policy</Link></li>
-              <li><Link href="/policies#refund-policy" className="hover:text-sky-300 transition-colors duration-300">Refund Policy</Link></li>
-              <li><Link href="/policies#acceptable-use-policy" className="hover:text-sky-300 transition-colors duration-300">Acceptable Use Policy</Link></li>
+              <li><Link href="/policies#privacy-policy" className="hover:text-sky-400 transition-colors duration-300">Privacy Policy</Link></li>
+              <li><Link href="/policies#terms-of-service" className="hover:text-sky-400 transition-colors duration-300">Terms of Service</Link></li>
+              <li><Link href="/policies#cookie-policy" className="hover:text-sky-400 transition-colors duration-300">Cookie Policy</Link></li>
+              <li><Link href="/policies#refund-policy" className="hover:text-sky-400 transition-colors duration-300">Refund Policy</Link></li>
+              <li><Link href="/policies#acceptable-use-policy" className="hover:text-sky-400 transition-colors duration-300">Acceptable Use Policy</Link></li>
             </ul>
           </div>
 
           {/* Contact and Social Media */}
           <div>
-            <h5 className="font-semibold text-lg mb-3 text-sky-400">Connect With Us</h5>
+            <h5 className="font-bold text-md mb-4 text-sky-500 uppercase tracking-wider">Connect With Us</h5>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="mailto:typingspeedacademy@hotmail.com" className="hover:text-sky-300 transition-colors duration-300 flex items-center">
-                  <EnvelopeIcon className="h-5 w-5 mr-2" />
+                <a href="mailto:typingspeedacademy@hotmail.com" className="hover:text-sky-400 transition-colors duration-300 flex items-center group">
+                  <EnvelopeIcon className="h-5 w-5 mr-2 group-hover:text-sky-400 transition-colors duration-300" />
                   typingspeedacademy@hotmail.com
                 </a>
               </li>
               <li>
-                <a href="https://www.instagram.com/typingspeedacademy/" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition-colors duration-300 flex items-center">
-                  <InstagramIcon />
+                <a href="https://www.instagram.com/typingspeedacademy/" target="_blank" rel="noopener noreferrer" className="hover:text-sky-400 transition-colors duration-300 flex items-center group">
+                  <InstagramIcon /> <span className="ml-2 group-hover:text-sky-400 transition-colors duration-300">Instagram</span>
                 </a>
               </li>
               {/* Placeholder for Facebook and Twitter - replace with actual links */}
               <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition-colors duration-300 flex items-center">
-                  <FacebookIcon />
+                <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-sky-400 transition-colors duration-300 flex items-center group">
+                  <FacebookIcon /> <span className="ml-2 group-hover:text-sky-400 transition-colors duration-300">Facebook</span>
                 </a>
               </li>
               <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 transition-colors duration-300 flex items-center">
-                  <TwitterIcon />
+                <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-sky-400 transition-colors duration-300 flex items-center group">
+                  <TwitterIcon /> <span className="ml-2 group-hover:text-sky-400 transition-colors duration-300">Twitter</span>
                 </a>
               </li>
               {/* Add other social media links here */}
@@ -85,7 +85,7 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="text-center text-xs text-gray-500 pt-8 border-t border-gray-700">
+        <div className="text-center text-sm text-slate-500 pt-10 mt-12 border-t border-slate-700">
           &copy; {new Date().getFullYear()} TypingSpeedAcademy. All rights reserved.
         </div>
       </div>
