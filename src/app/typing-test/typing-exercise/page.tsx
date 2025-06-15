@@ -254,26 +254,44 @@ export default function TypingExercisePage() {
 
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    console.log(`[TimerEffect] Fired. pre: ${preTestCountdown}, active: ${timerActive}, left: ${timeLeft}`);
+    let intervalId: NodeJS.Timeout | undefined;
+
     if (preTestCountdown !== null && preTestCountdown > 0) {
-      interval = setInterval(() => {
-        setPreTestCountdown(prev => (prev !== null ? prev - 1 : null));
+      console.log('[TimerEffect] Condition A: Pre-countdown running.');
+      intervalId = setInterval(() => {
+        setPreTestCountdown(prev => {
+          console.log('[TimerEffect] Interval A: prev preTestCountdown:', prev);
+          return prev !== null ? prev - 1 : null;
+        });
       }, 1000);
     } else if (preTestCountdown === 0) {
+      console.log('[TimerEffect] Condition B: Pre-countdown finished. Setting timerActive=true.');
       setPreTestCountdown(null);
       setTimerActive(true); // Start the actual test timer
       setStartTime(Date.now());
       inputRef.current?.focus(); // Focus after pre-test countdown
     } else if (timerActive && timeLeft > 0) {
-      interval = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
+      console.log('[TimerEffect] Condition C: Main timer running.');
+      intervalId = setInterval(() => {
+        setTimeLeft(prev => {
+          console.log('[TimerEffect] Interval C: prev timeLeft:', prev);
+          return prev - 1;
+        });
       }, 1000);
     } else if (timeLeft === 0 && timerActive) {
+      console.log('[TimerEffect] Condition D: Main timer finished.');
       setTimerActive(false);
       setTestFinished(true);
       calculateResults();
     }
-    return () => clearInterval(interval);
+
+    return () => {
+      if (intervalId) {
+        console.log('[TimerEffect] Cleanup: Clearing interval', intervalId);
+        clearInterval(intervalId);
+      }
+    };
   }, [timerActive, timeLeft, preTestCountdown]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -414,6 +432,7 @@ export default function TypingExercisePage() {
     setShowStartNotification(true); // Show "Test Started!" briefly
     sentenceBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setIsBlinking(true);
+    console.log('[startTest] Called. Setting preTestCountdown to 3.');
     setPreTestCountdown(3); // Start 3-second pre-test countdown
   };
 
