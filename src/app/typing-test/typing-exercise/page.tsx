@@ -274,7 +274,7 @@ export default function TypingExercisePage() {
       calculateResults();
     }
     return () => clearInterval(interval);
-  }, [timerActive, timeLeft]);
+  }, [timerActive, timeLeft, preTestCountdown]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (testFinished) return;
