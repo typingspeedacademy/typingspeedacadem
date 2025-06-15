@@ -157,6 +157,16 @@ export default function TypingExercisePage() {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
   const inputRef = useRef<HTMLInputElement>(null); // Ref for the hidden input
+  const sentenceBoxRef = useRef<HTMLDivElement>(null); // Ref for the sentence display box
+  const [isBlinking, setIsBlinking] = useState(false);
+  const [preTestCountdown, setPreTestCountdown] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (isBlinking) {
+      const blinkTimer = setTimeout(() => setIsBlinking(false), 1000); // Blink for 1 second
+      return () => clearTimeout(blinkTimer);
+    }
+  }, [isBlinking]);
 
   useEffect(() => {
     if (showStartNotification) {
@@ -245,7 +255,16 @@ export default function TypingExercisePage() {
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (timerActive && timeLeft > 0) {
+    if (preTestCountdown !== null && preTestCountdown > 0) {
+      interval = setInterval(() => {
+        setPreTestCountdown(prev => (prev !== null ? prev - 1 : null));
+      }, 1000);
+    } else if (preTestCountdown === 0) {
+      setPreTestCountdown(null);
+      setTimerActive(true); // Start the actual test timer
+      setStartTime(Date.now());
+      inputRef.current?.focus(); // Focus after pre-test countdown
+    } else if (timerActive && timeLeft > 0) {
       interval = setInterval(() => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
@@ -261,9 +280,12 @@ export default function TypingExercisePage() {
     if (testFinished) return;
 
     const newTypedText = e.target.value;
-    if (!timerActive && newTypedText.length > 0) {
-      setTimerActive(true);
-      setStartTime(Date.now());
+    if (!timerActive && preTestCountdown === null && newTypedText.length > 0 && !testFinished) {
+      // This condition is to start the timer if user types before clicking start, 
+      // but now we have a pre-test countdown, so this might need adjustment or removal
+      // For now, let's assume startTest is always called first.
+      // setTimerActive(true);
+      // setStartTime(Date.now());
     }
     setTypedText(newTypedText);
 
@@ -387,9 +409,12 @@ export default function TypingExercisePage() {
     loadNewSentence();
     setTypedText(''); // Clear previously typed text
     setResults({ wpm: 0, accuracy: 0, score: 0, errors: 0, typedChars: 0 });
-    setStartTime(null);
-    inputRef.current?.focus();
-    setShowStartNotification(true);
+    setStartTime(null); 
+    // inputRef.current?.focus(); // Focus will happen after pre-test countdown
+    setShowStartNotification(true); // Show "Test Started!" briefly
+    sentenceBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setIsBlinking(true);
+    setPreTestCountdown(3); // Start 3-second pre-test countdown
   };
 
   const getHighlightedText = () => {
@@ -450,13 +475,21 @@ export default function TypingExercisePage() {
                   ))}
                 </select>
               </div>
-              <div className="text-3xl sm:text-4xl font-mono font-bold text-electric-blue tracking-wider">
-                {formatTime(timeLeft)}
+              <div className={`text-3xl sm:text-4xl font-mono font-bold tracking-wider ${preTestCountdown !== null && preTestCountdown > 0 ? 'text-green-400' : 'text-electric-blue'}`}>
+                {preTestCountdown !== null && preTestCountdown > 0 ? formatTime(preTestCountdown) : formatTime(timeLeft)}
               </div>
             </div>
 
             {/* Sentence Display */}
-            <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-slate-900 rounded-lg border border-electric-blue text-lg sm:text-xl md:text-2xl leading-relaxed sm:leading-loose tracking-wide">
+            {/* Sentence Display */}
+            <div 
+              ref={sentenceBoxRef}
+              className={`mb-6 sm:mb-8 p-4 sm:p-6 bg-slate-900 rounded-lg border text-lg sm:text-xl md:text-2xl leading-relaxed sm:leading-loose tracking-wide transition-all duration-300 ${isBlinking ? 'border-green-500 shadow-green-500/50 shadow-lg scale-105' : 'border-electric-blue'}`}>
+              {preTestCountdown !== null && preTestCountdown > 0 ? (
+                <div className="flex items-center justify-center h-full text-4xl font-bold text-green-400">
+                  {preTestCountdown}
+                </div>
+              ) : (
               {currentSentence.split('').map((char, index) => {
                 let charClass = '';
                 if (index < typedText.length) {
@@ -465,6 +498,7 @@ export default function TypingExercisePage() {
                 if (index === typedText.length) charClass += ' animate-pulse-cursor'; // Simple cursor
                 return <span key={index} className={charClass}>{char}</span>;
               })}
+              )}
             </div>
 
             {/* Hidden Input for Mobile/Accessibility - can be focused by clicking sentence */}
