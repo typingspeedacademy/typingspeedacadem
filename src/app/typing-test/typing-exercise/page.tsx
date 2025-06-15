@@ -213,7 +213,7 @@ export default function TypingExercisePage() {
     setTimerActive(false);
     setTypedText('');
     setResults({ wpm: 0, accuracy: 0, score: 0, errors: 0, typedChars: 0 });
-  }, [selectedDifficulty, selectedLanguage, selectedTime, loadNewSentence]);
+  }, [selectedDifficulty, selectedLanguage, selectedTime]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
