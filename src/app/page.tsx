@@ -78,6 +78,7 @@ export default function HomePage() {
   const [isScrollingNeeded, setIsScrollingNeeded] = useState(false);
   const [isAutoScrolling, setIsAutoScrolling] = useState(true);
   const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
   useEffect(() => {
     const checkScroll = () => {
@@ -101,9 +102,10 @@ export default function HomePage() {
           const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
           const cardWidth = scrollContainerRef.current.children[0]?.clientWidth || clientWidth;
           const numCards = featuredCourses.length;
-          const currentCardIndex = Math.round(scrollLeft / cardWidth);
+          const newCardIndex = Math.round(scrollLeft / cardWidth);
+          setCurrentCardIndex(newCardIndex);
 
-          if (currentCardIndex >= numCards - 1) {
+          if (newCardIndex >= numCards - 1) {
             // If at the end, scroll to the beginning
             scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
           } else {
@@ -257,7 +259,28 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-          {/* Scroll Buttons Removed */}
+          {/* Dot Indicators */} 
+          <div className="flex justify-center space-x-2 mt-4">
+            {featuredCourses.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  if (scrollContainerRef.current) {
+                    const cardWidth = scrollContainerRef.current.children[0]?.clientWidth || 0;
+                    scrollContainerRef.current.scrollTo({
+                      left: cardWidth * index,
+                      behavior: 'smooth',
+                    });
+                    handleManualScroll(); // Stop auto-scroll on manual interaction
+                  }
+                }}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ease-in-out ${ 
+                  currentCardIndex === index ? 'bg-sky-500 scale-125' : 'bg-slate-300 hover:bg-slate-400'
+                }`}
+                aria-label={`Go to course ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
