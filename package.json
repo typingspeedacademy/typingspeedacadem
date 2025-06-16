@@ -21,7 +21,8 @@
     "react-dom": "^18",
     "react-icons": "^5.5.0",
     "recharts": "^2.15.3",
-    "render": "^0.1.4"
+    "render": "^0.1.4",
+    "tailwind-scrollbar-hide": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
