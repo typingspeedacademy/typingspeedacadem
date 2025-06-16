@@ -248,7 +248,8 @@ export default function HomePage() {
           >
             {featuredCourses.map((course) => (
               <div key={course.id} className="snap-center flex-shrink-0 w-[calc(100%-2rem)] sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4">
-                <div className="bg-white/80 backdrop-blur-lg p-6 md:p-8 rounded-2xl shadow-xl hover:shadow-sky-500/20 border border-slate-200/80 hover:border-sky-300 transition-all duration-300 h-full flex flex-col">
+                {/* Updated styling for a more container-like appearance */}
+                <div className="bg-white backdrop-blur-md p-6 md:p-8 rounded-xl shadow-lg border border-gray-300 hover:border-sky-500 hover:shadow-xl transition-all duration-300 h-full flex flex-col">
                   <div className="w-full h-40 sm:h-48 bg-gradient-to-br from-sky-100 to-indigo-200 rounded-xl flex items-center justify-center shadow-lg mb-6">
                     <span className="text-5xl sm:text-6xl text-sky-600">{course.icon}</span> 
                   </div>
