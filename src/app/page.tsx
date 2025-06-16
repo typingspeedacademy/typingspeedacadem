@@ -232,7 +232,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Course Snippet Section */}
-      <section className="relative z-10 mt-28 w-full max-w-6xl mx-auto py-16">
+      <section className="relative z-10 mt-28 w-full max-w-6xl mx-auto py-10 px-6 bg-slate-100 rounded-2xl shadow-xl">
         <h2 className="text-4xl sm:text-5xl font-semibold text-center text-slate-800 mb-12">
           Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Courses</span>
         </h2>
