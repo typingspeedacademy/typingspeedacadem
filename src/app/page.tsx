@@ -99,11 +99,16 @@ export default function HomePage() {
       autoScrollIntervalRef.current = setInterval(() => {
         if (scrollContainerRef.current && isAutoScrolling && isScrollingNeeded) {
           const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-          if (scrollLeft >= scrollWidth - clientWidth - 1) { // -1 for potential float precision issues
+          const cardWidth = scrollContainerRef.current.children[0]?.clientWidth || clientWidth;
+          const numCards = featuredCourses.length;
+          const currentCardIndex = Math.round(scrollLeft / cardWidth);
+
+          if (currentCardIndex >= numCards - 1) {
             // If at the end, scroll to the beginning
             scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
           } else {
-            scroll('right');
+            // Scroll to the next card
+            scrollContainerRef.current.scrollBy({ left: cardWidth, behavior: 'smooth' });
           }
         }
       }, 3000); // Auto-scroll every 3 seconds
@@ -137,9 +142,9 @@ export default function HomePage() {
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
-      const scrollAmount = scrollContainerRef.current.clientWidth * 0.8; // Scroll by 80% of visible width
+      const cardWidth = scrollContainerRef.current.children[0]?.clientWidth || scrollContainerRef.current.clientWidth;
       scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        left: direction === 'left' ? -cardWidth : cardWidth,
         behavior: 'smooth',
       });
     }
@@ -239,7 +244,7 @@ export default function HomePage() {
             style={{ scrollBehavior: 'smooth' }}
           >
             {featuredCourses.map((course) => (
-              <div key={course.id} className="snap-center flex-shrink-0 w-[calc(100%-2rem)] sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4">
+              <div key={course.id} className="snap-center flex-shrink-0 w-full">
                 <div className="bg-white/80 backdrop-blur-lg p-6 md:p-8 rounded-2xl shadow-xl hover:shadow-sky-500/20 border border-slate-200/80 hover:border-sky-300 transition-all duration-300 h-full flex flex-col">
                   <div className="w-full h-40 sm:h-48 bg-gradient-to-br from-sky-100 to-indigo-200 rounded-xl flex items-center justify-center shadow-lg mb-6">
                     <span className="text-5xl sm:text-6xl text-sky-600">{course.icon}</span>
@@ -258,21 +263,7 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-          {/* Scroll Buttons */}
-          <button
-            onClick={scrollLeft}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 sm:-translate-x-1/2 md:-translate-x-3/4 bg-slate-700/60 hover:bg-sky-500 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:-translate-x-1/2 focus:outline-none focus:ring-2 focus:ring-sky-400 z-20"
-            aria-label="Scroll left"
-          >
-            <ChevronLeftIcon className="h-6 w-6" />
-          </button>
-          <button
-            onClick={scrollRight}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 sm:translate-x-1/2 md:translate-x-3/4 bg-slate-700/60 hover:bg-sky-500 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-x-1/2 focus:outline-none focus:ring-2 focus:ring-sky-400 z-20"
-            aria-label="Scroll right"
-          >
-            <ChevronRightSolidIcon className="h-6 w-6" />
-          </button>
+          {/* Scroll Buttons Removed */}
         </div>
       </section>
 
