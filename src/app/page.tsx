@@ -2,6 +2,7 @@
 import Link from 'next/link';
 
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
+import MiniTypingTest from '@/components/MiniTypingTest'; // Import the new component
 
 // Enhanced Fluid Visual Background
 const FluidVisualBackground = () => {
@@ -75,16 +76,11 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Interactive Mini-Typing Demo Link */}
-      <div className="relative z-10 mt-20 w-full max-w-2xl mx-auto p-10 bg-white/70 backdrop-blur-lg rounded-2xl shadow-xl text-center">
+      {/* Mini Typing Test Section */}
+      <div className="relative z-10 mt-20 w-full max-w-2xl mx-auto p-6 md:p-10 bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl text-center border border-slate-200">
         <h2 className="text-3xl font-semibold text-slate-700 mb-6">Try a Quick Sample!</h2>
-        <p className="text-slate-600 mb-8">Ready to test your speed? Click below to start a quick typing test.</p>
-        <Link 
-          href="/typing-test"
-          className="group text-lg font-medium px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg hover:shadow-xl hover:from-emerald-600 hover:to-green-600 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition-all duration-300 ease-in-out flex items-center justify-center max-w-xs mx-auto"
-        >
-          Start Quick Test <ChevronRightIcon className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-        </Link>
+        <MiniTypingTest />
+        <p className="text-xs text-slate-500 mt-4">Want the full experience? <Link href="/typing-test" className="text-sky-600 hover:underline">Go to the main typing test</Link>.</p>
       </div>
 
       <div className="relative z-10 mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto w-full">
