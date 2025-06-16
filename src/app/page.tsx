@@ -142,18 +142,6 @@ export default function HomePage() {
     // setTimeout(() => setIsAutoScrolling(true), 5000); // Restart after 5s of inactivity
   };
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const cardWidth = scrollContainerRef.current.children[0]?.clientWidth || scrollContainerRef.current.clientWidth;
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -cardWidth : cardWidth,
-        behavior: 'smooth',
-      });
-    }
-  };
-
-
-
   const howItWorksSteps = [
     { id: 1, title: "Sign Up Free", description: "Create your account in seconds and start your journey.", icon: "👤" },
     { id: 2, title: "Practice Daily", description: "Engage with tailored exercises and fun challenges.", icon: "⌨️" },
