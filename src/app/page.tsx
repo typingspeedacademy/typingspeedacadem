@@ -33,7 +33,7 @@ const FluidVisualBackground = () => {
   );
 };
 
-import { ChevronLeftIcon, ChevronRightIcon as ChevronRightSolidIcon } from '@heroicons/react/24/solid'; // Added for carousel controls
+
 import { useRef, useState, useEffect } from 'react'; // Added for carousel logic
 
 export default function HomePage() {
@@ -152,15 +152,7 @@ export default function HomePage() {
     }
   };
 
-  const scrollLeft = () => {
-    handleManualScroll(); // Stop auto-scroll on manual interaction
-    scroll('left');
-  };
 
-  const scrollRight = () => {
-    handleManualScroll(); // Stop auto-scroll on manual interaction
-    scroll('right');
-  };
 
   const howItWorksSteps = [
     { id: 1, title: "Sign Up Free", description: "Create your account in seconds and start your journey.", icon: "👤" },
