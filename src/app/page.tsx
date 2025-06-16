@@ -246,18 +246,12 @@ export default function HomePage() {
             {featuredCourses.map((course) => (
               <div key={course.id} className="snap-center flex-shrink-0 w-full">
                 <div className="bg-white/80 backdrop-blur-lg p-6 md:p-8 rounded-2xl shadow-xl hover:shadow-sky-500/20 border border-slate-200/80 hover:border-sky-300 transition-all duration-300 h-full flex flex-row items-center">
-                  <div className="flex flex-col flex-grow text-left w-2/3 pr-6">
-                    <h3 className="text-xl sm:text-2xl font-semibold text-slate-700 mb-3">{course.title}</h3>
-                    <p className="text-slate-600 text-sm sm:text-base mb-6 leading-relaxed flex-grow">{course.description}</p>
-                    <Link
-                      href={course.link}
-                      className="mt-auto inline-block text-md font-medium px-6 py-3 rounded-xl bg-sky-500 text-white shadow-md hover:bg-sky-600 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-sky-300 transition-all duration-300 ease-in-out self-start"
-                    >
-                      Learn More
-                    </Link>
-                  </div>
-                  <div className="w-1/3 h-full bg-gradient-to-br from-sky-100 to-indigo-200 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-1/3 h-full bg-gradient-to-br from-sky-100 to-indigo-200 rounded-xl flex items-center justify-center shadow-lg mr-6">
                     <span className="text-6xl sm:text-7xl md:text-8xl text-sky-600">{course.icon}</span>
+                  </div>
+                  <div className="flex flex-col flex-grow text-left w-2/3">
+                    <h3 className="text-xl sm:text-2xl font-semibold text-slate-700 mb-3">{course.title}</h3>
+                    <p className="text-slate-600 text-sm sm:text-base leading-relaxed flex-grow">{course.description}</p>
                   </div>
                 </div>
               </div>
