@@ -33,12 +33,117 @@ const FluidVisualBackground = () => {
   );
 };
 
+import { ChevronLeftIcon, ChevronRightIcon as ChevronRightSolidIcon } from '@heroicons/react/24/solid'; // Added for carousel controls
+import { useRef, useState, useEffect } from 'react'; // Added for carousel logic
+
 export default function HomePage() {
   const benefits = [
     { title: "Boost Your Speed", description: "Dramatically increase your WPM with targeted exercises.", icon: "⚡" },
     { title: "Track Your Progress", description: "Monitor your improvement with detailed analytics.", icon: "📊" },
     { title: "Compete Globally", description: "Challenge typists worldwide and climb the leaderboards.", icon: "🌍" },
   ];
+
+  const featuredCourses = [
+    {
+      id: 'advanced-typing',
+      title: "Advanced Typing Techniques",
+      description: "Master complex patterns, improve accuracy under pressure, and learn ergonomic best practices. Take your skills to a professional level.",
+      icon: "🚀",
+      link: "/courses/advanced-typing"
+    },
+    {
+      id: 'speed-drills',
+      title: "Speed Drills Challenge",
+      description: "Push your limits with high-intensity speed drills designed to significantly boost your WPM. Are you fast enough?",
+      icon: "⏱️",
+      link: "/courses/speed-drills"
+    },
+    {
+      id: 'accuracy-focus',
+      title: "Accuracy Focus Bootcamp",
+      description: "Eliminate typos and improve your precision with targeted exercises. Accuracy is key to true typing mastery.",
+      icon: "🎯",
+      link: "/courses/accuracy-focus"
+    },
+    {
+      id: 'coding-typing',
+      title: "Typing for Coders",
+      description: "Learn to type special characters and common programming syntax quickly and efficiently. Boost your coding productivity.",
+      icon: "💻",
+      link: "/courses/coding-typing"
+    }
+  ];
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isScrollingNeeded, setIsScrollingNeeded] = useState(false);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(true);
+  const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const checkScroll = () => {
+      if (scrollContainerRef.current) {
+        setIsScrollingNeeded(scrollContainerRef.current.scrollWidth > scrollContainerRef.current.clientWidth);
+      }
+    };
+    checkScroll();
+    window.addEventListener('resize', checkScroll);
+    return () => window.removeEventListener('resize', checkScroll);
+  }, [featuredCourses]); // Removed scrollContainerRef from dependencies as it's stable
+
+  // Auto-scrolling logic
+  useEffect(() => {
+    const startAutoScroll = () => {
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+      }
+      autoScrollIntervalRef.current = setInterval(() => {
+        if (scrollContainerRef.current && isAutoScrolling && isScrollingNeeded) {
+          const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+          if (scrollLeft >= scrollWidth - clientWidth - 1) { // -1 for potential float precision issues
+            // If at the end, scroll to the beginning
+            scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            scroll('right');
+          }
+        }
+      }, 3000); // Auto-scroll every 3 seconds
+    };
+
+    if (isAutoScrolling && isScrollingNeeded) {
+      startAutoScroll();
+    }
+
+    return () => {
+      if (autoScrollIntervalRef.current) {
+        clearInterval(autoScrollIntervalRef.current);
+      }
+    };
+  }, [isAutoScrolling, isScrollingNeeded]); // Re-run if auto-scrolling state or need changes
+
+  const handleMouseEnter = () => {
+    setIsAutoScrolling(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsAutoScrolling(true);
+  };
+
+  const handleManualScroll = () => {
+    setIsAutoScrolling(false); // Stop auto-scroll on manual interaction
+    // Optionally, restart auto-scroll after a delay if desired
+    // if (autoScrollIntervalRef.current) clearInterval(autoScrollIntervalRef.current);
+    // setTimeout(() => setIsAutoScrolling(true), 5000); // Restart after 5s of inactivity
+  };
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = scrollContainerRef.current.clientWidth * 0.8; // Scroll by 80% of visible width
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   const howItWorksSteps = [
     { id: 1, title: "Sign Up Free", description: "Create your account in seconds and start your journey.", icon: "👤" },
@@ -110,26 +215,58 @@ export default function HomePage() {
       </section>
 
       {/* Featured Course Snippet Section */}
-      <section className="relative z-10 mt-28 w-full max-w-5xl mx-auto py-16">
-        <h2 className="text-4xl sm:text-5xl font-semibold text-center text-slate-800 mb-20">
-          Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Course</span>
+      <section className="relative z-10 mt-28 w-full max-w-6xl mx-auto py-16">
+        <h2 className="text-4xl sm:text-5xl font-semibold text-center text-slate-800 mb-12">
+          Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Courses</span>
         </h2>
-        <div className="bg-white/80 backdrop-blur-lg p-10 md:p-12 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center gap-10 hover:shadow-sky-500/30 border border-transparent hover:border-sky-300 transition-all duration-300">
-          <div className="w-full md:w-1/3 h-52 md:h-64 bg-gradient-to-br from-sky-100 to-indigo-200 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-6xl text-sky-600">🚀</span> 
+        <div className="relative">
+          <div 
+            ref={scrollContainerRef} 
+            className="flex overflow-x-auto space-x-6 md:space-x-8 py-4 scrollbar-hide snap-x snap-mandatory"
+            style={{ scrollBehavior: 'smooth' }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onWheel={handleManualScroll} // Stop auto-scroll on mouse wheel
+            onTouchStart={handleManualScroll} // Stop auto-scroll on touch
+          >
+            {featuredCourses.map((course) => (
+              <div key={course.id} className="snap-center flex-shrink-0 w-[calc(100%-2rem)] sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4">
+                <div className="bg-white/80 backdrop-blur-lg p-6 md:p-8 rounded-2xl shadow-xl hover:shadow-sky-500/20 border border-slate-200/80 hover:border-sky-300 transition-all duration-300 h-full flex flex-col">
+                  <div className="w-full h-40 sm:h-48 bg-gradient-to-br from-sky-100 to-indigo-200 rounded-xl flex items-center justify-center shadow-lg mb-6">
+                    <span className="text-5xl sm:text-6xl text-sky-600">{course.icon}</span> 
+                  </div>
+                  <div className="flex flex-col flex-grow text-center">
+                    <h3 className="text-xl sm:text-2xl font-semibold text-slate-700 mb-3">{course.title}</h3>
+                    <p className="text-slate-600 text-sm sm:text-base mb-6 leading-relaxed flex-grow">{course.description}</p>
+                    <Link 
+                      href={course.link}
+                      className="mt-auto inline-block text-md font-medium px-6 py-3 rounded-xl bg-sky-500 text-white shadow-md hover:bg-sky-600 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-sky-300 transition-all duration-300 ease-in-out"
+                    >
+                      Learn More
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="w-full md:w-2/3 text-center md:text-left">
-            <h3 className="text-3xl font-semibold text-slate-700 mb-4">Advanced Typing Techniques</h3>
-            <p className="text-slate-600 text-lg mb-6 leading-relaxed">
-              Master complex patterns, improve accuracy under pressure, and learn ergonomic best practices to type faster and more comfortably than ever before. This course is designed for those ready to take their skills to a professional level.
-            </p>
-            <Link 
-              href="/courses/advanced-typing"
-              className="inline-block text-lg font-medium px-8 py-4 rounded-xl bg-sky-500 text-white shadow-md hover:bg-sky-600 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-sky-300 transition-all duration-300 ease-in-out"
-            >
-              Learn More
-            </Link>
-          </div>
+          {isScrollingNeeded && (
+            <>
+              <button 
+                onClick={() => { scroll('left'); handleManualScroll(); }}
+                aria-label="Scroll left"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-2 bg-white/80 backdrop-blur-md rounded-full shadow-lg hover:bg-sky-100 transition-colors duration-200 ml-2 md:-ml-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeftIcon className="h-6 w-6 text-sky-600" />
+              </button>
+              <button 
+                onClick={() => { scroll('right'); handleManualScroll(); }}
+                aria-label="Scroll right"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 p-2 bg-white/80 backdrop-blur-md rounded-full shadow-lg hover:bg-sky-100 transition-colors duration-200 mr-2 md:-mr-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRightSolidIcon className="h-6 w-6 text-sky-600" />
+              </button>
+            </>
+          )}
         </div>
       </section>
 
