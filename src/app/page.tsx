@@ -78,7 +78,6 @@ export default function HomePage() {
   const [isScrollingNeeded, setIsScrollingNeeded] = useState(false);
   const [isAutoScrolling, setIsAutoScrolling] = useState(true);
   const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [currentCourseIndex, setCurrentCourseIndex] = useState(0); // Track current course for snapping
 
   useEffect(() => {
     const checkScroll = () => {
@@ -99,16 +98,18 @@ export default function HomePage() {
       }
       autoScrollIntervalRef.current = setInterval(() => {
         if (scrollContainerRef.current && isAutoScrolling && isScrollingNeeded) {
-          setCurrentCourseIndex(prevIndex => {
-            const nextIndex = (prevIndex + 1) % featuredCourses.length;
-            scrollToCourse(nextIndex);
-            return nextIndex;
-          });
+          const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+          if (scrollLeft >= scrollWidth - clientWidth - 1) { // -1 for potential float precision issues
+            // If at the end, scroll to the beginning
+            scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            scroll('right');
+          }
         }
       }, 3000); // Auto-scroll every 3 seconds
     };
 
-    if (isAutoScrolling && isScrollingNeeded && featuredCourses.length > 0) {
+    if (isAutoScrolling && isScrollingNeeded) {
       startAutoScroll();
     }
 
@@ -117,21 +118,7 @@ export default function HomePage() {
         clearInterval(autoScrollIntervalRef.current);
       }
     };
-  }, [isAutoScrolling, isScrollingNeeded, featuredCourses.length]); // Re-run if auto-scrolling state or need changes
-
-  const scrollToCourse = (index: number) => {
-    if (scrollContainerRef.current) {
-      const courseElements = scrollContainerRef.current.children;
-      if (courseElements[index]) {
-        const courseElement = courseElements[index] as HTMLElement;
-        scrollContainerRef.current.scrollTo({
-          left: courseElement.offsetLeft - (scrollContainerRef.current.clientWidth - courseElement.clientWidth) / 2, // Center the item
-          behavior: 'smooth',
-        });
-        setCurrentCourseIndex(index);
-      }
-    }
-  };
+  }, [isAutoScrolling, isScrollingNeeded]); // Re-run if auto-scrolling state or need changes
 
   const handleMouseEnter = () => {
     setIsAutoScrolling(false);
@@ -149,17 +136,23 @@ export default function HomePage() {
   };
 
   const scroll = (direction: 'left' | 'right') => {
-    handleManualScroll(); // Stop auto-scroll on manual button click
-    setCurrentCourseIndex(prevIndex => {
-      let nextIndex;
-      if (direction === 'left') {
-        nextIndex = (prevIndex - 1 + featuredCourses.length) % featuredCourses.length;
-      } else {
-        nextIndex = (prevIndex + 1) % featuredCourses.length;
-      }
-      scrollToCourse(nextIndex);
-      return nextIndex;
-    });
+    if (scrollContainerRef.current) {
+      const scrollAmount = scrollContainerRef.current.clientWidth * 0.8; // Scroll by 80% of visible width
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const scrollLeft = () => {
+    handleManualScroll(); // Stop auto-scroll on manual interaction
+    scroll('left');
+  };
+
+  const scrollRight = () => {
+    handleManualScroll(); // Stop auto-scroll on manual interaction
+    scroll('right');
   };
 
   const howItWorksSteps = [
@@ -232,31 +225,29 @@ export default function HomePage() {
       </section>
 
       {/* Featured Course Snippet Section */}
-      <section className="relative z-10 mt-28 w-full max-w-6xl mx-auto py-10 px-6 bg-slate-100 rounded-2xl shadow-xl">
-        <h2 className="text-4xl sm:text-5xl font-semibold text-center text-slate-800 mb-12">
-          Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-indigo-500">Courses</span>
+      <section className="relative z-10 mt-28 w-full max-w-6xl mx-auto py-16">
+        <h2 className="text-4xl md:text-5xl font-bold text-center text-slate-800 mb-4">
+          Featured Courses
         </h2>
-        <div className="relative">
-          <div 
-            ref={scrollContainerRef} 
-            className="flex overflow-x-auto space-x-6 md:space-x-8 py-4 scrollbar-hide snap-x snap-mandatory"
+        <p className="text-lg md:text-xl text-center text-slate-600 mb-12 max-w-3xl mx-auto">
+          Explore our handpicked selection of courses designed to elevate your skills and career.
+        </p>
+        <div className="relative group">
+          <div
+            ref={scrollContainerRef}
+            className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide space-x-4 md:space-x-6 lg:space-x-8 px-4 py-4 -mx-4"
             style={{ scrollBehavior: 'smooth' }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onWheel={handleManualScroll} // Stop auto-scroll on mouse wheel
-            onTouchStart={handleManualScroll} // Stop auto-scroll on touch
           >
             {featuredCourses.map((course) => (
               <div key={course.id} className="snap-center flex-shrink-0 w-[calc(100%-2rem)] sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4">
-                {/* Updated styling for a more container-like appearance */}
-                <div className="bg-white backdrop-blur-md p-6 md:p-8 rounded-xl shadow-lg border border-gray-300 hover:border-sky-500 hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                <div className="bg-white/80 backdrop-blur-lg p-6 md:p-8 rounded-2xl shadow-xl hover:shadow-sky-500/20 border border-slate-200/80 hover:border-sky-300 transition-all duration-300 h-full flex flex-col">
                   <div className="w-full h-40 sm:h-48 bg-gradient-to-br from-sky-100 to-indigo-200 rounded-xl flex items-center justify-center shadow-lg mb-6">
-                    <span className="text-5xl sm:text-6xl text-sky-600">{course.icon}</span> 
+                    <span className="text-5xl sm:text-6xl text-sky-600">{course.icon}</span>
                   </div>
                   <div className="flex flex-col flex-grow text-center">
                     <h3 className="text-xl sm:text-2xl font-semibold text-slate-700 mb-3">{course.title}</h3>
                     <p className="text-slate-600 text-sm sm:text-base mb-6 leading-relaxed flex-grow">{course.description}</p>
-                    <Link 
+                    <Link
                       href={course.link}
                       className="mt-auto inline-block text-md font-medium px-6 py-3 rounded-xl bg-sky-500 text-white shadow-md hover:bg-sky-600 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-sky-300 transition-all duration-300 ease-in-out"
                     >
@@ -267,24 +258,21 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-          {isScrollingNeeded && (
-            <>
-              <button 
-                onClick={() => { scroll('left'); handleManualScroll(); }}
-                aria-label="Scroll left"
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-2 bg-white/80 backdrop-blur-md rounded-full shadow-lg hover:bg-sky-100 transition-colors duration-200 ml-2 md:-ml-4 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronLeftIcon className="h-6 w-6 text-sky-600" />
-              </button>
-              <button 
-                onClick={() => { scroll('right'); handleManualScroll(); }}
-                aria-label="Scroll right"
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 p-2 bg-white/80 backdrop-blur-md rounded-full shadow-lg hover:bg-sky-100 transition-colors duration-200 mr-2 md:-mr-4 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronRightSolidIcon className="h-6 w-6 text-sky-600" />
-              </button>
-            </>
-          )}
+          {/* Scroll Buttons */}
+          <button
+            onClick={scrollLeft}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 sm:-translate-x-1/2 md:-translate-x-3/4 bg-slate-700/60 hover:bg-sky-500 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:-translate-x-1/2 focus:outline-none focus:ring-2 focus:ring-sky-400 z-20"
+            aria-label="Scroll left"
+          >
+            <ChevronLeftIcon className="h-6 w-6" />
+          </button>
+          <button
+            onClick={scrollRight}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 sm:translate-x-1/2 md:translate-x-3/4 bg-slate-700/60 hover:bg-sky-500 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-x-1/2 focus:outline-none focus:ring-2 focus:ring-sky-400 z-20"
+            aria-label="Scroll right"
+          >
+            <ChevronRightSolidIcon className="h-6 w-6" />
+          </button>
         </div>
       </section>
 
