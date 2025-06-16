@@ -75,12 +75,16 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Placeholder for Interactive Mini-Typing Demo */}
+      {/* Interactive Mini-Typing Demo Link */}
       <div className="relative z-10 mt-20 w-full max-w-2xl mx-auto p-10 bg-white/70 backdrop-blur-lg rounded-2xl shadow-xl text-center">
         <h2 className="text-3xl font-semibold text-slate-700 mb-6">Try a Quick Sample!</h2>
-        <p className="text-slate-400 mb-4">[Interactive typing demo component will go here]</p>
-        {/* Example: <MiniTypingTest /> */}
-        <p className="text-xs text-slate-500">This is a placeholder for a mini typing test.</p>
+        <p className="text-slate-600 mb-8">Ready to test your speed? Click below to start a quick typing test.</p>
+        <Link 
+          href="/typing-test"
+          className="group text-lg font-medium px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg hover:shadow-xl hover:from-emerald-600 hover:to-green-600 focus:outline-none focus:ring-4 focus:ring-emerald-300 transition-all duration-300 ease-in-out flex items-center justify-center max-w-xs mx-auto"
+        >
+          Start Quick Test <ChevronRightIcon className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+        </Link>
       </div>
 
       <div className="relative z-10 mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto w-full">
