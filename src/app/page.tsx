@@ -78,6 +78,7 @@ export default function HomePage() {
   const [isScrollingNeeded, setIsScrollingNeeded] = useState(false);
   const [isAutoScrolling, setIsAutoScrolling] = useState(true);
   const autoScrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [currentCourseIndex, setCurrentCourseIndex] = useState(0); // Track current course for snapping
 
   useEffect(() => {
     const checkScroll = () => {
@@ -98,18 +99,16 @@ export default function HomePage() {
       }
       autoScrollIntervalRef.current = setInterval(() => {
         if (scrollContainerRef.current && isAutoScrolling && isScrollingNeeded) {
-          const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-          if (scrollLeft >= scrollWidth - clientWidth - 1) { // -1 for potential float precision issues
-            // If at the end, scroll to the beginning
-            scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-          } else {
-            scroll('right');
-          }
+          setCurrentCourseIndex(prevIndex => {
+            const nextIndex = (prevIndex + 1) % featuredCourses.length;
+            scrollToCourse(nextIndex);
+            return nextIndex;
+          });
         }
       }, 3000); // Auto-scroll every 3 seconds
     };
 
-    if (isAutoScrolling && isScrollingNeeded) {
+    if (isAutoScrolling && isScrollingNeeded && featuredCourses.length > 0) {
       startAutoScroll();
     }
 
@@ -118,7 +117,21 @@ export default function HomePage() {
         clearInterval(autoScrollIntervalRef.current);
       }
     };
-  }, [isAutoScrolling, isScrollingNeeded]); // Re-run if auto-scrolling state or need changes
+  }, [isAutoScrolling, isScrollingNeeded, featuredCourses.length]); // Re-run if auto-scrolling state or need changes
+
+  const scrollToCourse = (index: number) => {
+    if (scrollContainerRef.current) {
+      const courseElements = scrollContainerRef.current.children;
+      if (courseElements[index]) {
+        const courseElement = courseElements[index] as HTMLElement;
+        scrollContainerRef.current.scrollTo({
+          left: courseElement.offsetLeft - (scrollContainerRef.current.clientWidth - courseElement.clientWidth) / 2, // Center the item
+          behavior: 'smooth',
+        });
+        setCurrentCourseIndex(index);
+      }
+    }
+  };
 
   const handleMouseEnter = () => {
     setIsAutoScrolling(false);
@@ -136,13 +149,17 @@ export default function HomePage() {
   };
 
   const scroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = scrollContainerRef.current.clientWidth * 0.8; // Scroll by 80% of visible width
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
+    handleManualScroll(); // Stop auto-scroll on manual button click
+    setCurrentCourseIndex(prevIndex => {
+      let nextIndex;
+      if (direction === 'left') {
+        nextIndex = (prevIndex - 1 + featuredCourses.length) % featuredCourses.length;
+      } else {
+        nextIndex = (prevIndex + 1) % featuredCourses.length;
+      }
+      scrollToCourse(nextIndex);
+      return nextIndex;
+    });
   };
 
   const howItWorksSteps = [
