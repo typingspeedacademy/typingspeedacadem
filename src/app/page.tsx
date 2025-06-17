@@ -99,18 +99,21 @@ export default function HomePage() {
       }
       autoScrollIntervalRef.current = setInterval(() => {
         if (scrollContainerRef.current && isAutoScrolling && isScrollingNeeded) {
-          const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-          const cardWidth = scrollContainerRef.current.children[0]?.clientWidth || clientWidth;
-          const numCards = featuredCourses.length;
-          const newCardIndex = Math.round(scrollLeft / cardWidth);
-          setCurrentCardIndex(newCardIndex);
+          const { children } = scrollContainerRef.current;
+          if (!children || children.length === 0) return;
 
-          if (newCardIndex >= numCards - 1) {
+          const numCards = featuredCourses.length;
+
+          // currentCardIndex is now managed by the separate scroll event listener
+          if (currentCardIndex >= numCards - 1) {
             // If at the end, scroll to the beginning
             scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
           } else {
-            // Scroll to the next card
-            scrollContainerRef.current.scrollBy({ left: cardWidth, behavior: 'smooth' });
+            // Scroll to the next card's position
+            const nextCardElement = children[currentCardIndex + 1] as HTMLElement;
+            if (nextCardElement) {
+              scrollContainerRef.current.scrollTo({ left: nextCardElement.offsetLeft, behavior: 'smooth' });
+            }
           }
         }
       }, 3000); // Auto-scroll every 3 seconds
@@ -125,7 +128,48 @@ export default function HomePage() {
         clearInterval(autoScrollIntervalRef.current);
       }
     };
-  }, [isAutoScrolling, isScrollingNeeded]); // Re-run if auto-scrolling state or need changes
+  }, [isAutoScrolling, isScrollingNeeded, currentCardIndex, featuredCourses.length]); // Re-run if auto-scrolling state or need changes
+
+  // Effect to update currentCardIndex based on scroll position
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const calculateCurrentCard = () => {
+      const { scrollLeft, children, offsetWidth } = container;
+      if (!children || children.length === 0) return;
+
+      let closestIndex = 0;
+      let minDistance = Infinity;
+
+      for (let i = 0; i < children.length; i++) {
+        const card = children[i] as HTMLElement;
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+        const scrollContainerCenter = scrollLeft + offsetWidth / 2;
+        const distance = Math.abs(cardCenter - scrollContainerCenter);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIndex = i;
+        }
+      }
+      setCurrentCardIndex(closestIndex);
+    };
+
+    let scrollTimeout: NodeJS.Timeout;
+    const debouncedScrollHandler = () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(calculateCurrentCard, 100); // Debounce for performance
+    };
+
+    container.addEventListener('scroll', debouncedScrollHandler);
+    calculateCurrentCard(); // Initial calculation on mount/update
+
+    return () => {
+      container.removeEventListener('scroll', debouncedScrollHandler);
+      clearTimeout(scrollTimeout);
+    };
+  }, [featuredCourses.length]); // Rerun if the number of courses changes
 
   const handleMouseEnter = () => {
     setIsAutoScrolling(false);
@@ -246,11 +290,13 @@ export default function HomePage() {
                 key={index}
                 onClick={() => {
                   if (scrollContainerRef.current) {
-                    const cardWidth = scrollContainerRef.current.children[0]?.clientWidth || 0;
-                    scrollContainerRef.current.scrollTo({
-                      left: cardWidth * index,
-                      behavior: 'smooth',
-                    });
+                    const cardElement = scrollContainerRef.current.children[index] as HTMLElement;
+                    if (cardElement) {
+                        scrollContainerRef.current.scrollTo({
+                            left: cardElement.offsetLeft,
+                            behavior: 'smooth',
+                        });
+                    }
                     handleManualScroll(); // Stop auto-scroll on manual interaction
                   }
                 }}
