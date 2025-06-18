@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const AuthOptionsPage = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 to-sky-800 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-dark-navy p-4">
       <div className="bg-white/10 backdrop-blur-lg shadow-xl rounded-xl p-8 md:p-12 max-w-md w-full text-center">
         <h1 className="text-4xl font-bold text-white mb-8">Get Started</h1>
         <p className="text-sky-200 mb-10 text-lg">
