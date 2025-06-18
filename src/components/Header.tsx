@@ -89,10 +89,10 @@ const Header = () => {
             </div>
           ) : (
             <Link 
-              href="/signup" 
+              href="/auth-options" 
               className="bg-gradient-to-r from-sky-500 to-indigo-500 text-white px-5 py-2.5 rounded-lg hover:from-sky-600 hover:to-indigo-600 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              Sign Up
+              Get Started
             </Link>
           )}
           <div className="md:hidden">

@@ -51,8 +51,13 @@ const TypingTestPage = () => {
   const [user, setUser] = useState<User | null>(null); // Added user state
   const supabase = createClient(); // Initialize Supabase client
 
+  // State for accumulating stats across multiple texts in a single session
+  const [totalWordsTyped, setTotalWordsTyped] = useState(0);
+  const [totalCharsInTexts, setTotalCharsInTexts] = useState(0);
+  const [totalErrorsInSession, setTotalErrorsInSession] = useState(0);
+
   // Function to get a new text based on settings
-  const getNewText = useCallback(() => {
+  const getNewText = useCallback((isFullReset = true) => {
     const filteredTexts = sampleTexts.filter(
       (st) => st.difficulty === difficulty && st.language === language
     );
@@ -77,11 +82,18 @@ const TypingTestPage = () => {
     }
     setUserInput('');
     setErrors(0);
-    setStartTime(null);
-    setEndTime(null);
-    setTestActive(false);
-    setTestCompleted(false);
-    setTimeLeft(duration);
+    if (isFullReset) {
+      setStartTime(null);
+      setEndTime(null);
+      setTestActive(false);
+      setTestCompleted(false);
+      setTimeLeft(duration);
+      setTotalWordsTyped(0);
+      setTotalCharsInTexts(0);
+      setTotalErrorsInSession(0);
+    }
+    // If not a full reset (i.e., getting next text in an active session),
+    // startTime, timeLeft, testActive remain as they are.
   }, [difficulty, language, duration]);
 
   // Fetch user and initialize text
@@ -91,8 +103,18 @@ const TypingTestPage = () => {
       setUser(currentUser);
     };
     getUser();
-    getNewText(); // Initialize text on component mount and when settings change
-  }, [supabase, getNewText]); // getNewText is now a dependency
+    getNewText(true); // Initialize text on component mount (full reset)
+  }, [supabase]); // Removed getNewText from here to avoid re-triggering on its own changes
+
+  // useEffect to get new text when settings (difficulty, language, duration) change
+  useEffect(() => {
+    if(startTime === null) { // Only reset if the test hasn't been started yet or after a full reset
+        getNewText(true);
+    }
+    // If a test is active, changing settings should ideally prompt the user or reset fully.
+    // For now, we'll let getNewText(true) handle the reset if called via resetTest().
+  }, [difficulty, language, duration]);
+
 
   // Timer logic
   useEffect(() => {
@@ -122,28 +144,51 @@ const TypingTestPage = () => {
       setErrors(currentErrors);
 
       if (e.target.value.length === text.length) {
-        endTest();
+        // If time is left, get a new sentence, otherwise end the test
+        if (timeLeft > 0) {
+          // Accumulate stats for the completed text before getting a new one
+          setTotalWordsTyped(prev => prev + userInput.trim().split(/\s+/).filter(Boolean).length);
+          setTotalCharsInTexts(prev => prev + text.length);
+          setTotalErrorsInSession(prev => prev + errors);
+          
+          getNewText(false); // Pass false to indicate it's not a full reset
+          setUserInput(''); 
+          setErrors(0); 
+        } else {
+          endTest();
+        }
       }
     }
   };
 
   const startTest = () => {
-    setUserInput('');
-    setErrors(0);
+    // Get a fresh text for the new test start
+    getNewText(true); // This will reset userInput, errors, and session stats
     setStartTime(Date.now());
     setEndTime(null);
     setTestActive(true);
     setTestCompleted(false);
-    setTimeLeft(duration); // Reset timer
+    setTimeLeft(duration); // Ensure timer is set to full duration
   };
 
   const saveTestAnalytics = async () => {
     if (!user) return;
 
-    const wordsTyped = userInput.trim().split(/\s+/).filter(Boolean).length;
+    // Use accumulated stats for saving analytics
+    // If the test ended due to time, the last partial text's stats need to be added.
+    let finalTotalWordsTyped = totalWordsTyped;
+    let finalTotalCharsInTexts = totalCharsInTexts;
+    let finalTotalErrorsInSession = totalErrorsInSession;
+
+    if (userInput.trim().length > 0 && timeLeft === 0) { // Add stats from the current text if time ran out mid-text
+        finalTotalWordsTyped += userInput.trim().split(/\s+/).filter(Boolean).length;
+        finalTotalCharsInTexts += text.length; // Or userInput.length for typed chars?
+        finalTotalErrorsInSession += errors;
+    }
+
     const durationInMinutes = duration / 60;
-    const calculatedWpm = durationInMinutes > 0 ? Math.round(wordsTyped / durationInMinutes) : 0;
-    const calculatedAccuracy = text.length > 0 ? Math.round(((text.length - errors) / text.length) * 100) : 0;
+    const calculatedWpm = durationInMinutes > 0 ? Math.round(finalTotalWordsTyped / durationInMinutes) : 0;
+    const calculatedAccuracy = finalTotalCharsInTexts > 0 ? Math.round(((finalTotalCharsInTexts - finalTotalErrorsInSession) / finalTotalCharsInTexts) * 100) : 0;
 
     const { error } = await supabase.from('user_typing_analytics').insert([
       {
@@ -213,27 +258,33 @@ const TypingTestPage = () => {
   useEffect(() => {
     if (testCompleted) {
       saveTestAnalytics();
-      saveCompletedLesson(); // Call saveCompletedLesson here
+      // saveCompletedLesson might need adjustment. If a session involves multiple texts,
+      // which lesson ID should be saved? For now, it saves the last one that was active.
+      saveCompletedLesson(); 
     }
-  }, [testCompleted]); // Dependencies: testCompleted, saveTestAnalytics, saveCompletedLesson
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [testCompleted]); // Removed saveTestAnalytics and saveCompletedLesson from deps to avoid potential loops if they change state that re-triggers this effect.
 
   const calculateWPM = () => {
-    if (!startTime || !endTime || text.length === 0) return 0;
-    const timeTakenMinutes = (endTime - startTime) / 60000;
-    const wordsTyped = text.split(' ').length;
-    // Prevent division by zero if timeTakenMinutes is very small or zero
-    if (timeTakenMinutes <= 0) return 0; 
-    return Math.round(wordsTyped / timeTakenMinutes);
+    if (!testCompleted || totalWordsTyped === 0) return 0;
+    const timeTakenMinutes = duration / 60; // Use the total session duration
+    if (timeTakenMinutes <= 0) return 0;
+    return Math.round(totalWordsTyped / timeTakenMinutes);
   };
 
   const calculateAccuracy = () => {
-    if (text.length === 0) return 100;
-    const correctChars = text.length - errors;
-    return Math.round((correctChars / text.length) * 100);
+    if (!testCompleted || totalCharsInTexts === 0) return 100;
+    const correctChars = totalCharsInTexts - totalErrorsInSession;
+    return Math.round((correctChars / totalCharsInTexts) * 100);
   };
 
   const resetTest = () => {
-    getNewText(); // Call getNewText without arguments as it uses state for difficulty and language
+    getNewText(true); // Perform a full reset
+    // startTest() also calls getNewText(true) and resets timer and active state, so it's more comprehensive for a full reset button.
+    // If this resetTest is for the button, startTest() might be more appropriate.
+    // For now, getNewText(true) will reset text and session stats.
+    // To ensure the timer also resets and test becomes active for a "New Test" button:
+    startTest(); 
   };
 
   const handleSettingsChange = (newDuration: number, newDifficulty: string, newLanguage: string) => { // Renamed duration to newDuration for clarity
