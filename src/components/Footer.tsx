@@ -68,17 +68,7 @@ const Footer = () => {
                   <InstagramIcon /> <span className="ml-2 group-hover:text-sky-400 transition-colors duration-300">Instagram</span>
                 </a>
               </li>
-              {/* Placeholder for Facebook and Twitter - replace with actual links */}
-              <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-sky-400 transition-colors duration-300 flex items-center group">
-                  <FacebookIcon /> <span className="ml-2 group-hover:text-sky-400 transition-colors duration-300">Facebook</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-sky-400 transition-colors duration-300 flex items-center group">
-                  <TwitterIcon /> <span className="ml-2 group-hover:text-sky-400 transition-colors duration-300">Twitter</span>
-                </a>
-              </li>
+              {/* Social media links */}
               {/* Add other social media links here */}
             </ul>
           </div>
