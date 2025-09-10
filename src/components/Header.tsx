@@ -76,23 +76,23 @@ const Header = () => {
             <div className="flex items-center space-x-3">
               <Link 
                 href="/dashboard" 
-                className="text-sky-700 hover:text-white bg-sky-100 hover:bg-sky-500 px-5 py-2.5 rounded-lg text-base font-medium transition-colors duration-300 border border-sky-300 hover:border-sky-500 shadow-sm hover:shadow-md transform hover:scale-105"
+                className="text-sky-700 hover:text-white bg-sky-100 hover:bg-sky-500 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-300 border border-sky-300 hover:border-sky-500 shadow-sm hover:shadow-md"
               >
                 Dashboard
               </Link>
               <button
                 onClick={handleLogout}
-                className="bg-pink-500 text-white px-5 py-2.5 rounded-lg hover:bg-pink-600 transition-colors duration-300 font-semibold text-base shadow-md hover:shadow-lg transform hover:scale-105"
+                className="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition-colors duration-300 font-semibold text-sm shadow-md hover:shadow-lg transform hover:scale-105"
               >
                 Logout
               </button>
             </div>
           ) : (
             <Link 
-              href="/auth-options" 
+              href="/signup" 
               className="bg-gradient-to-r from-sky-500 to-indigo-500 text-white px-5 py-2.5 rounded-lg hover:from-sky-600 hover:to-indigo-600 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              Get Started
+              Sign Up
             </Link>
           )}
           <div className="md:hidden">

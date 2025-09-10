@@ -1,0 +1,35 @@
+TypingSpeedAcademy - Email Verification
+========================================
+
+Welcome to TypingSpeedAcademy!
+
+Hi there,
+
+Thank you for joining TypingSpeedAcademy! We're excited to help you improve your typing speed and accuracy.
+
+To get started and secure your account, please verify your email address by clicking the link below:
+
+{{ .ConfirmationURL }}
+
+If the link doesn't work, copy and paste it into your browser.
+
+SECURITY NOTE: This verification link will expire in 24 hours for your security. If you didn't create an account with us, please ignore this email.
+
+Once verified, you'll be able to:
+• Track your typing progress and statistics
+• Access personalized typing lessons
+• Compete on our leaderboards
+• Get notified about new features and courses
+• Unlock advanced typing techniques
+• Join our community of typing enthusiasts
+
+Ready to type faster? Start your typing journey today!
+
+---
+TypingSpeedAcademy
+Master Your Typing Skills
+
+© 2024 TypingSpeedAcademy. All rights reserved.
+This email was sent to {{ .Email }} because you signed up for an account.
+
+Website | Support | Privacy Policy

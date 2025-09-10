@@ -38,20 +38,20 @@ yarn install
 
 ### 3. Set up Supabase
 
-1.  Go to [Supabase](https://supabase.com/) and create a new project.
-2.  In your Supabase project, navigate to **Project Settings** > **API**.
-3.  Find your **Project URL** and **Project API Keys** (use the `anon` `public` key).
-4.  Create a `.env.local` file in the root of your project directory (if it doesn't exist).
-5.  Add your Supabase credentials to the `.env.local` file:
+**For detailed setup instructions, see [SUPABASE_SETUP_GUIDE.md](./SUPABASE_SETUP_GUIDE.md)**
+
+Quick setup:
+1.  Create a new Supabase project at [Supabase](https://supabase.com/)
+2.  Run the SQL script from `supabase-setup.sql` in your Supabase SQL Editor
+3.  Get your project credentials from **Project Settings** > **API**
+4.  Update the `.env.local` file with your new credentials:
 
     ```env
     NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_URL
     NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
     ```
 
-    Replace `YOUR_SUPABASE_URL` and `YOUR_SUPABASE_ANON_KEY` with your actual Supabase project URL and anon key.
-
-6.  **Enable Email Authentication**: In your Supabase project, go to **Authentication** > **Providers** and ensure the **Email** provider is enabled. You might want to disable "Confirm email" for easier local development initially, but it's recommended for production.
+5.  Enable Email Authentication in **Authentication** > **Providers**
 
 ### 4. Run the Development Server
 
